@@ -1,0 +1,124 @@
+/* assets/css/admin.css */
+
+.wrap h1 {
+    color: #333;
+    font-size: 24px;
+}
+
+.wp-list-table .column-check {
+    font-weight: bold;
+}
+
+.wp-list-table .column-result,
+.wp-list-table .column-recommendation {
+    text-align: left;
+}
+
+/* Boxed layout for each check */
+.site-vital-box {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Color indicators */
+.site-vital-status-good {
+    border-left: 4px solid #28a745;
+    background-color: #e8f5e9;
+}
+
+.site-vital-status-needs-attention {
+    border-left: 4px solid #ffc107;
+    background-color: #fff3cd;
+}
+
+.site-vital-status-needs-improvement,
+.site-vital-status-needs-optimization {
+    border-left: 4px solid #dc3545;
+    background-color: #f8d7da;
+}
+
+/* Header styles */
+.site-vital-box h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+/* Result and recommendation styles */
+.site-vital-result,
+.site-vital-recommendation {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #555;
+}
+
+/* Hide the table header */
+.wp-list-table thead,
+.wp-list-table .manage-column {
+    display: none;
+}
+
+/* Site Vitals Dashboard Styles */
+.site-vital-summary-box {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.site-vital-summary-box h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.site-vital-check {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.status-good {
+    color: #28a745; /* Green */
+}
+
+.status-warning {
+    color: #ffc107; /* Yellow */
+}
+
+.status-danger {
+    color: #dc3545; /* Red */
+}
+
+.status-default {
+    color: #6c757d; /* Gray */
+}
+
+table.fixed,
+table.fixed tbody,
+table.fixed tr,
+.alternate,
+.striped>tbody>:nth-child(odd), 
+ul.striped>:nth-child(odd) {
+    border: 0;
+    background: transparent;
+}
+
+.wp-list-table .column-check {
+    padding: 0;
+    background: transparent;
+}
+
+#site-vitals-support-btn,
+#site-vitals-docs-btn {
+    line-height: 22px;
+    float: right;
+    margin-left: 12px;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    gap: 6;
+}
