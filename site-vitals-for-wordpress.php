@@ -65,6 +65,9 @@ class Site_Vitals_For_WordPress {
 
     /**
      * Adds menu and submenu pages.
+     * 
+     * @since  1.0.0
+     * @return void
      */
     public function add_admin_menu() {
         add_menu_page(
@@ -95,6 +98,9 @@ class Site_Vitals_For_WordPress {
      * Displays the settings page.
      *
      * @param string $category Optional. The category to display. Default is 'performance'.
+     * 
+     * @since  1.0.0
+     * @return void
      */
     public function settings_page( $category = 'performance' ) {
         if ( is_null( $category ) ) {
@@ -140,6 +146,9 @@ class Site_Vitals_For_WordPress {
      * Displays the category table.
      *
      * @param string $category The category slug.
+     * 
+     * @since  1.0.0
+     * @return void
      */
     private function display_category_table( $category ) {
         $table = new Site_Vitals_Table( $this, $category );
@@ -151,6 +160,9 @@ class Site_Vitals_For_WordPress {
      * Enqueues admin scripts and styles.
      *
      * @param string $hook The current admin page.
+     * 
+     * @since  1.0.0
+     * @return void
      */
     public function enqueue_scripts( $hook ) {
         if ( strpos( $hook, 'site-vitals' ) === false ) {
@@ -165,6 +177,9 @@ class Site_Vitals_For_WordPress {
      * Runs the page load speed check.
      *
      * @return array Associative array with result and recommendation.
+     * 
+     * @since  1.0.0
+     * @return array
      */
     public function run_page_load_speed_check() {
         $url          = home_url();
@@ -201,6 +216,7 @@ class Site_Vitals_For_WordPress {
     /**
      * Runs the image optimization check.
      *
+     * @since  1.0.0
      * @return array Associative array with result and recommendation.
      */
     public function run_image_optimization_check() {
@@ -228,6 +244,7 @@ class Site_Vitals_For_WordPress {
     /**
      * Runs the code optimization check.
      *
+     * @since  1.0.0
      * @return array Associative array with result and recommendation.
      */
     public function run_code_optimization_check() {
@@ -250,6 +267,7 @@ class Site_Vitals_For_WordPress {
     /**
      * Runs the third-party scripts check.
      *
+     * @since  1.0.0
      * @return array Associative array with result and recommendation.
      */
     public function run_third_party_scripts_check() {
@@ -286,6 +304,7 @@ class Site_Vitals_For_WordPress {
     /**
      * Runs the server response time check.
      *
+     * @since  1.0.0
      * @return array Associative array with result and recommendation.
      */
     public function run_server_response_time_check() {
@@ -310,17 +329,18 @@ class Site_Vitals_For_WordPress {
     /**
      * Runs SSL certificate check.
      *
+     * @since  1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_ssl_certificate_check() {
-        $ssl_enabled = is_ssl();
-        $result      = $ssl_enabled ? esc_html__( 'Good', 'text-domain' ) : esc_html__( 'Needs Attention', 'text-domain' );
+        $ssl_enabled    = is_ssl();
+        $result         = $ssl_enabled ? esc_html__( 'Good', 'site-vitals-wp' ) : esc_html__( 'Needs Attention', 'site-vitals-wp' );
         $recommendation = $ssl_enabled
-            ? esc_html__( 'SSL is active on your site.', 'text-domain' )
-            : esc_html__( 'Your site is not using SSL. Consider enabling SSL for security and SEO benefits.', 'text-domain' );
+            ? esc_html__( 'SSL is active on your site.', 'site-vitals-wp' )
+            : esc_html__( 'Your site is not using SSL. Consider enabling SSL for security and SEO benefits.', 'site-vitals-wp' );
 
         return [
-            'result'        => $result,
+            'result'         => $result,
             'recommendation' => $recommendation,
         ];
     }
@@ -328,11 +348,12 @@ class Site_Vitals_For_WordPress {
     /**
      * Runs plugin update check.
      *
+     * @since  1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_plugin_update_check() {
         $outdated_plugins = [];
-        $plugin_updates  = get_site_transient( 'update_plugins' );
+        $plugin_updates   = get_site_transient( 'update_plugins' );
 
         foreach ( get_plugins() as $plugin => $details ) {
             if ( isset( $plugin_updates->response[ $plugin ] ) ) {
@@ -341,13 +362,13 @@ class Site_Vitals_For_WordPress {
         }
 
         $plugin_count   = count( $outdated_plugins );
-        $result         = ( 0 === $plugin_count ) ? esc_html__( 'Good', 'text-domain' ) : esc_html__( 'Needs Attention', 'text-domain' );
+        $result         = ( 0 === $plugin_count ) ? esc_html__( 'Good', 'site-vitals-wp' ) : esc_html__( 'Needs Attention', 'site-vitals-wp' );
         $recommendation = ( 0 === $plugin_count )
-            ? esc_html__( 'All plugins are up to date.', 'text-domain' )
+            ? esc_html__( 'All plugins are up to date.', 'site-vitals-wp' )
             : wp_kses_post(
                 sprintf(
                     /* translators: %1$d: number of outdated plugins, %2$s: list of outdated plugin names */
-                    __( '<strong>%1$d outdated plugins</strong> detected: %2$s. Update them to the latest version for security.', 'text-domain' ),
+                    __( '<strong>%1$d outdated plugins</strong> detected: %2$s. Update them to the latest version for security.', 'site-vitals-wp' ),
                     absint( $plugin_count ),
                     esc_html( implode( ', ', $outdated_plugins ) )
                 )
@@ -362,10 +383,11 @@ class Site_Vitals_For_WordPress {
     /**
      * Runs theme update check.
      *
+     * @since  1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_theme_update_check() {
-        $update_themes    = get_site_transient( 'update_themes' );
+        $update_themes   = get_site_transient( 'update_themes' );
         $outdated_themes = [];
 
         if ( ! empty( $update_themes->response ) ) {
@@ -376,13 +398,13 @@ class Site_Vitals_For_WordPress {
         }
 
         $theme_count    = count( $outdated_themes );
-        $result         = ( 0 === $theme_count ) ? esc_html__( 'Good', 'text-domain' ) : esc_html__( 'Needs Attention', 'text-domain' );
+        $result         = ( 0 === $theme_count ) ? esc_html__( 'Good', 'site-vitals-wp' ) : esc_html__( 'Needs Attention', 'site-vitals-wp' );
         $recommendation = ( 0 === $theme_count )
-            ? esc_html__( 'All themes are up to date.', 'text-domain' )
+            ? esc_html__( 'All themes are up to date.', 'site-vitals-wp' )
             : wp_kses_post(
                 sprintf(
                     /* translators: %1$d: number of outdated themes, %2$s: list of outdated theme names */
-                    __( '<strong>%1$d outdated themes</strong> detected: %2$s. Update them to the latest version for security.', 'text-domain' ),
+                    __( '<strong>%1$d outdated themes</strong> detected: %2$s. Update them to the latest version for security.', 'site-vitals-wp' ),
                     absint( $theme_count ),
                     esc_html( implode( ', ', $outdated_themes ) )
                 )
@@ -397,12 +419,13 @@ class Site_Vitals_For_WordPress {
     /**
      * Runs WordPress core update check.
      *
+     * @since  1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_core_update_check() {
         global $wp_version;
-        $core_updates  = get_site_transient( 'update_core' );
-        $needs_update  = false;
+        $core_updates = get_site_transient( 'update_core' );
+        $needs_update = false;
 
         if ( ! empty( $core_updates->updates ) ) {
             foreach ( $core_updates->updates as $update ) {
@@ -413,10 +436,10 @@ class Site_Vitals_For_WordPress {
             }
         }
 
-        $result         = $needs_update ? esc_html__( 'Needs Attention', 'text-domain' ) : esc_html__( 'Good', 'text-domain' );
+        $result         = $needs_update ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
         $recommendation = $needs_update
-            ? esc_html__( 'A WordPress core update is available. Please update to the latest version.', 'text-domain' )
-            : esc_html__( 'WordPress core is up to date.', 'text-domain' );
+            ? esc_html__( 'A WordPress core update is available. Please update to the latest version.', 'site-vitals-wp' )
+            : esc_html__( 'WordPress core is up to date.', 'site-vitals-wp' );
 
         return [
             'result'        => $result,
@@ -427,14 +450,15 @@ class Site_Vitals_For_WordPress {
     /**
      * Runs login security check.
      *
+     * @since  1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_login_security_check() {
         $two_fa_enabled = get_option( 'wp_two_factor_enabled', false ); // Hypothetical plugin option for 2FA
-        $result         = $two_fa_enabled ? esc_html__( 'Good', 'text-domain' ) : esc_html__( 'Needs Attention', 'text-domain' );
+        $result         = $two_fa_enabled ? esc_html__( 'Good', 'site-vitals-wp' ) : esc_html__( 'Needs Attention', 'site-vitals-wp' );
         $recommendation = $two_fa_enabled
-            ? esc_html__( 'Two-factor authentication is enabled for logins.', 'text-domain' )
-            : esc_html__( 'Consider enabling two-factor authentication for additional login security.', 'text-domain' );
+            ? esc_html__( 'Two-factor authentication is enabled for logins.', 'site-vitals-wp' )
+            : esc_html__( 'Consider enabling two-factor authentication for additional login security.', 'site-vitals-wp' );
 
         return [
             'result'        => $result,
@@ -445,13 +469,14 @@ class Site_Vitals_For_WordPress {
     /**
      * Runs security headers check.
      *
+     * @since  1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_security_headers_check() {
         $headers         = getallheaders();
         $missing_headers = [];
 
-        // Check for common security headers
+        // Check for common security headers.
         if ( ! isset( $headers['X-Content-Type-Options'] ) ) {
             $missing_headers[] = 'X-Content-Type-Options';
         }
@@ -462,13 +487,13 @@ class Site_Vitals_For_WordPress {
             $missing_headers[] = 'X-XSS-Protection';
         }
 
-        $result = empty( $missing_headers ) ? esc_html__( 'Good', 'text-domain' ) : esc_html__( 'Needs Attention', 'text-domain' );
+        $result = empty( $missing_headers ) ? esc_html__( 'Good', 'site-vitals-wp' ) : esc_html__( 'Needs Attention', 'site-vitals-wp' );
 
         $recommendation = empty( $missing_headers )
-            ? esc_html__( 'All recommended security headers are present.', 'text-domain' )
+            ? esc_html__( 'All recommended security headers are present.', 'site-vitals-wp' )
             : sprintf(
                 /* translators: %s: list of missing security headers */
-                __( 'Missing security headers: %s. Consider adding them to improve security.', 'text-domain' ),
+                __( 'Missing security headers: %s. Consider adding them to improve security.', 'site-vitals-wp' ),
                 esc_html( implode( ', ', $missing_headers ) )
             );
 
@@ -481,6 +506,7 @@ class Site_Vitals_For_WordPress {
     /**
      * Runs file permissions check.
      *
+     * @since  1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_file_permissions_check() {
@@ -496,12 +522,12 @@ class Site_Vitals_For_WordPress {
             }
         }
 
-        $result         = empty( $insecure_files ) ? esc_html__( 'Good', 'text-domain' ) : esc_html__( 'Needs Attention', 'text-domain' );
+        $result         = empty( $insecure_files ) ? esc_html__( 'Good', 'site-vitals-wp' ) : esc_html__( 'Needs Attention', 'site-vitals-wp' );
         $recommendation = empty( $insecure_files )
-            ? esc_html__( 'File permissions are secure.', 'text-domain' )
+            ? esc_html__( 'File permissions are secure.', 'site-vitals-wp' )
             : sprintf(
                 /* translators: %s: list of insecure files */
-                __( 'Insecure file permissions detected for: %s. Set permissions to 644 for enhanced security.', 'text-domain' ),
+                __( 'Insecure file permissions detected for: %s. Set permissions to 644 for enhanced security.', 'site-vitals-wp' ),
                 esc_html( implode( ', ', $insecure_files ) )
             );
 
@@ -518,6 +544,7 @@ class Site_Vitals_For_WordPress {
     /**
      * Runs SEO meta tags check.
      *
+     * @since  1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_seo_meta_tags_check() {
@@ -526,8 +553,8 @@ class Site_Vitals_For_WordPress {
 
         if ( is_wp_error( $response ) ) {
             return [
-                'result'        => esc_html__( 'Error', 'text-domain' ),
-                'recommendation' => esc_html__( 'Unable to fetch homepage for SEO check. Please verify the server status.', 'text-domain' ),
+                'result'        => esc_html__( 'Error', 'site-vitals-wp' ),
+                'recommendation' => esc_html__( 'Unable to fetch homepage for SEO check. Please verify the server status.', 'site-vitals-wp' ),
             ];
         }
 
@@ -535,11 +562,11 @@ class Site_Vitals_For_WordPress {
         $has_title            = preg_match( '/<title>(.*?)<\/title>/', $body );
         $has_meta_description = preg_match( '/<meta name="description" content="(.*?)"/', $body );
 
-        $result = ( $has_title && $has_meta_description ) ? esc_html__( 'Good', 'text-domain' ) : esc_html__( 'Needs Attention', 'text-domain' );
+        $result = ( $has_title && $has_meta_description ) ? esc_html__( 'Good', 'site-vitals-wp' ) : esc_html__( 'Needs Attention', 'site-vitals-wp' );
 
         $recommendation = ( 'Good' === $result )
-            ? esc_html__( 'Title and description meta tags are set correctly.', 'text-domain' )
-            : esc_html__( 'Ensure both title and description meta tags are set for optimal SEO.', 'text-domain' );
+            ? esc_html__( 'Title and description meta tags are set correctly.', 'site-vitals-wp' )
+            : esc_html__( 'Ensure both title and description meta tags are set for optimal SEO.', 'site-vitals-wp' );
 
         return [
             'result'        => $result,
@@ -550,46 +577,47 @@ class Site_Vitals_For_WordPress {
     /**
      * Runs SEO plugin detection.
      *
+     * @since  1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_seo_plugin_detection() {
         $seo_plugins = [
-            'wordpress-seo/wp-seo.php',                          // Yoast SEO
-            'all-in-one-seo-pack/all_in_one_seo_pack.php',        // All in One SEO
-            'rank-math/rank-math.php',                           // Rank Math
-            'seo-by-rank-math/seo-by-rank-math.php',             // Rank Math SEO
-            'the-seo-framework/the-seo-framework.php',           // The SEO Framework
-            'squirrly-seo/squirrly.php',                         // Squirrly SEO
-            'wp-seopress/seopress.php',                          // SEOPress
-            'premium-seo-pack/premium-seo-pack.php',             // Premium SEO Pack
-            'smartcrawl-seo/wpmu_dev_smartcrawl.php',            // SmartCrawl SEO
-            'platinum-seo-pack/platinum_seo_pack.php',           // Platinum SEO Pack
-            'schema-and-structured-data-for-wp/structured-data-for-wp.php', // Schema & Structured Data
-            'seo-ultimate/seo-ultimate.php',                     // SEO Ultimate
-            'wp-meta-seo/wp-meta-seo.php',                       // WP Meta SEO
-            'wpsso/wpsso.php',                                   // WPSSO Core
-            'all-in-one-schemaorg-rich-snippets/index.php',       // All In One Schema.org
-            'google-analytics-for-wordpress/googleanalytics.php', // MonsterInsights
-            'w3-total-cache/w3-total-cache.php',                 // W3 Total Cache (SEO-compatible caching)
-            'simple-sitemap/simple-sitemap.php',                 // Simple Sitemap
-            'xml-sitemap-generator/xml-sitemap-generator.php',     // XML Sitemap Generator
-            'google-sitemap-generator/sitemap.php',              // Google XML Sitemaps
-            'broken-link-checker/broken-link-checker.php',       // Broken Link Checker
-            'seo-integration-for-wp/seo-integration.php',         // SEO Integration
-            'seo-image-optimizer/seo-image-optimizer.php',         // SEO Image Optimizer
-            'seo-friendly-images/seo-friendly-images.php',         // SEO Friendly Images
-            'local-seo/local-seo.php',                             // Local SEO
+            'wordpress-seo/wp-seo.php',
+            'all-in-one-seo-pack/all_in_one_seo_pack.php',
+            'rank-math/rank-math.php',
+            'seo-by-rank-math/seo-by-rank-math.php',
+            'the-seo-framework/the-seo-framework.php',
+            'squirrly-seo/squirrly.php',
+            'wp-seopress/seopress.php',
+            'premium-seo-pack/premium-seo-pack.php',
+            'smartcrawl-seo/wpmu_dev_smartcrawl.php',
+            'platinum-seo-pack/platinum_seo_pack.php',
+            'schema-and-structured-data-for-wp/structured-data-for-wp.php',
+            'seo-ultimate/seo-ultimate.php',
+            'wp-meta-seo/wp-meta-seo.php',
+            'wpsso/wpsso.php',
+            'all-in-one-schemaorg-rich-snippets/index.php',
+            'google-analytics-for-wordpress/googleanalytics.php',
+            'w3-total-cache/w3-total-cache.php',
+            'simple-sitemap/simple-sitemap.php',
+            'xml-sitemap-generator/xml-sitemap-generator.php',
+            'google-sitemap-generator/sitemap.php',
+            'broken-link-checker/broken-link-checker.php',
+            'seo-integration-for-wp/seo-integration.php',
+            'seo-image-optimizer/seo-image-optimizer.php',
+            'seo-friendly-images/seo-friendly-images.php',
+            'local-seo/local-seo.php',
         ];
 
         $active_seo_plugins = array_filter( $seo_plugins, 'is_plugin_active' );
 
-        $result         = empty( $active_seo_plugins ) ? esc_html__( 'No SEO Plugins Detected', 'text-domain' ) : esc_html__( 'SEO Plugin Active', 'text-domain' );
+        $result         = empty( $active_seo_plugins ) ? esc_html__( 'No SEO Plugins Detected', 'site-vitals-wp' ) : esc_html__( 'SEO Plugin Active', 'site-vitals-wp' );
         $recommendation = empty( $active_seo_plugins )
-            ? esc_html__( 'Consider installing an SEO plugin to enhance your site’s search engine visibility.', 'text-domain' )
-            : esc_html__( 'SEO plugin detected. Your site has additional SEO features enabled.', 'text-domain' );
+            ? esc_html__( 'Consider installing an SEO plugin to enhance your site’s search engine visibility.', 'site-vitals-wp' )
+            : esc_html__( 'SEO plugin detected. Your site has additional SEO features enabled.', 'site-vitals-wp' );
 
         return [
-            'result'        => $result,
+            'result'         => $result,
             'recommendation' => $recommendation,
         ];
     }
@@ -597,6 +625,7 @@ class Site_Vitals_For_WordPress {
     /**
      * Runs image alt text check.
      *
+     * @since  1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_image_alt_text_check() {
@@ -619,20 +648,20 @@ class Site_Vitals_For_WordPress {
             )
         );
 
-        $result = ( 0 === intval( $images_without_alt ) ) ? esc_html__( 'Good', 'text-domain' ) : esc_html__( 'Needs Attention', 'text-domain' );
+        $result = ( 0 === intval( $images_without_alt ) ) ? esc_html__( 'Good', 'site-vitals-wp' ) : esc_html__( 'Needs Attention', 'site-vitals-wp' );
 
         $recommendation = ( 0 === intval( $images_without_alt ) )
-            ? esc_html__( 'All images have alt text, which is good for SEO.', 'text-domain' )
+            ? esc_html__( 'All images have alt text, which is good for SEO.', 'site-vitals-wp' )
             : wp_kses_post(
                 sprintf(
                     /* translators: %s: number of images missing alt text */
-                    __( '<strong>%s images</strong> are missing alt text. Add descriptive alt text to improve SEO.', 'text-domain' ),
+                    __( '<strong>%s images</strong> are missing alt text. Add descriptive alt text to improve SEO.', 'site-vitals-wp' ),
                     intval( $images_without_alt )
                 )
             );
 
         return [
-            'result'        => $result,
+            'result'         => $result,
             'recommendation' => $recommendation,
         ];
     }
@@ -640,14 +669,15 @@ class Site_Vitals_For_WordPress {
     /**
      * Runs sitemap check.
      *
+     * @since  1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_sitemap_check() {
         $common_sitemap_urls = [
             home_url( '/sitemap.xml' ),
-            home_url( '/sitemap_index.xml' ),           // Yoast SEO
-            home_url( '/sitemap/sitemap-index.xml' ),  // Rank Math
-            home_url( '/wp-sitemap.xml' ),             // Default WordPress Sitemap
+            home_url( '/sitemap_index.xml' ),
+            home_url( '/sitemap/sitemap-index.xml' ),
+            home_url( '/wp-sitemap.xml' ),
         ];
 
         $sitemap_found = false;
@@ -660,11 +690,11 @@ class Site_Vitals_For_WordPress {
             }
         }
 
-        $result = $sitemap_found ? esc_html__( 'Good', 'text-domain' ) : esc_html__( 'No Sitemap Found', 'text-domain' );
+        $result = $sitemap_found ? esc_html__( 'Good', 'site-vitals-wp' ) : esc_html__( 'No Sitemap Found', 'site-vitals-wp' );
 
         $recommendation = $sitemap_found
-            ? esc_html__( 'Sitemap detected, which helps search engines index your site.', 'text-domain' )
-            : esc_html__( 'No sitemap found. Consider adding a sitemap to improve search engine indexing.', 'text-domain' );
+            ? esc_html__( 'Sitemap detected, which helps search engines index your site.', 'site-vitals-wp' )
+            : esc_html__( 'No sitemap found. Consider adding a sitemap to improve search engine indexing.', 'site-vitals-wp' );
 
         return [
             'result'        => $result,
@@ -676,200 +706,204 @@ class Site_Vitals_For_WordPress {
      * UX
      */
 
-     // Additional Checks
- 
-     /**
-      * Runs mobile responsiveness check.
-      *
-      * @return array An array containing the result and recommendation.
-      */
-     public function run_mobile_responsiveness_check() {
-         $theme_supports_responsive = current_theme_supports( 'responsive-embeds' );
-         $result                     = $theme_supports_responsive ? esc_html__( 'Good', 'text-domain' ) : esc_html__( 'Needs Improvement', 'text-domain' );
-         $recommendation             = $theme_supports_responsive
-             ? esc_html__( 'Your theme supports mobile responsiveness, enhancing user experience on mobile devices.', 'text-domain' )
-             : esc_html__( 'Consider using a mobile-responsive theme to improve user experience on mobile devices.', 'text-domain' );
- 
-         return [
-             'result'        => $result,
-             'recommendation' => $recommendation,
-         ];
-     }
- 
-     /**
-      * Runs navigation clarity check.
-      *
-      * @return array An array containing the result and recommendation.
-      */
-     public function run_navigation_clarity_check() {
-         global $wpdb;
- 
-         $orphaned_pages = $wpdb->get_var(
-             $wpdb->prepare(
-                 "
-                 SELECT COUNT(*)
-                 FROM {$wpdb->posts} AS p
-                 LEFT JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
-                 WHERE p.post_type = %s
-                     AND p.post_status = %s
-                     AND NOT EXISTS (
-                         SELECT * FROM {$wpdb->posts} AS p2
-                         WHERE p2.post_content LIKE %s
-                             AND p2.ID <> p.ID
-                     )
-                 ",
-                 'page',
-                 'publish',
-                 '%' . $wpdb->esc_like( p.post_name ) . '%'
-             )
-         );
- 
-         $result         = ( $orphaned_pages > 0 ) ? esc_html__( 'Needs Attention', 'text-domain' ) : esc_html__( 'Good', 'text-domain' );
-         $recommendation = ( $orphaned_pages > 0 )
-             ? wp_kses_post(
-                 sprintf(
-                     /* translators: %s: number of orphaned pages */
-                     __( 'Detected <strong>%s pages</strong> might be orphaned with no incoming links. Consider improving navigation or linking these pages.', 'text-domain' ),
-                     absint( $orphaned_pages )
-                 )
-             )
-             : esc_html__( 'Navigation clarity is good, with no orphaned pages detected.', 'text-domain' );
- 
-         return [
-             'result'        => $result,
-             'recommendation' => $recommendation,
-         ];
-     }
- 
-     /**
-      * Runs accessibility check.
-      *
-      * @return array An array containing the result and recommendation.
-      */
-     public function run_accessibility_check() {
-         global $wpdb;
- 
-         $missing_alts = $wpdb->get_var(
-             $wpdb->prepare(
-                 "
-                 SELECT COUNT(*)
-                 FROM {$wpdb->posts} AS p
-                 LEFT JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id AND pm.meta_key = %s
-                 WHERE p.post_type = %s
-                     AND p.post_mime_type LIKE %s
-                     AND (pm.meta_value IS NULL OR pm.meta_value = '')
-                 ",
-                 '_wp_attachment_image_alt',
-                 'attachment',
-                 'image/%'
-             )
-         );
- 
-         $result         = ( 0 === intval( $missing_alts ) ) ? esc_html__( 'Good', 'text-domain' ) : esc_html__( 'Needs Improvement', 'text-domain' );
-         $recommendation = ( 0 === intval( $missing_alts ) )
-             ? esc_html__( 'All images have alt tags, which helps meet accessibility standards.', 'text-domain' )
-             : wp_kses_post(
-                 sprintf(
-                     /* translators: %s: number of images missing alt tags */
-                     __( '<strong>%s images</strong> are missing alt tags. Add descriptive alt tags to improve accessibility.', 'text-domain' ),
-                     absint( $missing_alts )
-                 )
-             );
- 
-         return [
-             'result'        => $result,
-             'recommendation' => $recommendation,
-         ];
-     }
- 
-     /**
-      * Runs 404 error check.
-      *
-      * @return array An array containing the result and recommendation.
-      */
-     public function run_404_error_check() {
-         $pages_to_check = [
-             home_url( '/nonexistent-page' ),
-             home_url( '/broken-link' ),
-         ];
- 
-         $error_count = 0;
-         foreach ( $pages_to_check as $url ) {
-             $response = wp_remote_head( $url );
-             if ( ! is_wp_error( $response ) && 404 === intval( wp_remote_retrieve_response_code( $response ) ) ) {
-                 $error_count++;
-             }
-         }
- 
-         $result         = ( $error_count > 0 ) ? esc_html__( 'Needs Attention', 'text-domain' ) : esc_html__( 'Good', 'text-domain' );
-         $recommendation = ( $error_count > 0 )
-             ? wp_kses_post(
-                 sprintf(
-                     /* translators: %s: number of 404 error pages */
-                     __( 'Detected <strong>%s pages</strong> returning 404 errors. Ensure no broken links or missing pages.', 'text-domain' ),
-                     absint( $error_count )
-                 )
-             )
-             : esc_html__( 'No 404 error pages detected, navigation is clear.', 'text-domain' );
- 
-         return [
-             'result'        => $result,
-             'recommendation' => $recommendation,
-         ];
-     }
- 
-     /**
-      * Runs page load time check.
-      *
-      * @return array An array containing the result and recommendation.
-      */
-     public function run_page_load_time_check() {
-         $url        = home_url();
-         $start_time = microtime( true );
-         $response   = wp_remote_get( $url );
-         $load_time  = microtime( true ) - $start_time;
+    /**
+     * Runs mobile responsiveness check.
+     *
+     * @since  1.0.0
+     * @return array An array containing the result and recommendation.
+     */
+    public function run_mobile_responsiveness_check() {
+        $theme_supports_responsive = current_theme_supports( 'responsive-embeds' );
+        $result                    = $theme_supports_responsive ? esc_html__( 'Good', 'site-vitals-wp' ) : esc_html__( 'Needs Improvement', 'site-vitals-wp' );
+        $recommendation            = $theme_supports_responsive
+            ? esc_html__( 'Your theme supports mobile responsiveness, enhancing user experience on mobile devices.', 'site-vitals-wp' )
+            : esc_html__( 'Consider using a mobile-responsive theme to improve user experience on mobile devices.', 'site-vitals-wp' );
 
-         $threshold     = 2; // Set load time threshold in seconds
-         $result        = ( $load_time > $threshold ) ? esc_html__( 'Needs Improvement', 'text-domain' ) : esc_html__( 'Good', 'text-domain' );
-         $recommendation = ( $load_time > $threshold )
-             ? wp_kses_post(
-                 sprintf(
-                     /* translators: %s: homepage load time in seconds */
-                     __( 'Homepage load time is <strong>%s seconds</strong>. Consider optimizing images or enabling caching.', 'text-domain' ),
-                     esc_html( round( $load_time, 2 ) )
-                 )
-             )
-             : esc_html__( 'Homepage load time is optimal.', 'text-domain' );
+        return [
+            'result'         => $result,
+            'recommendation' => $recommendation,
+        ];
+    }
  
-         return [
-             'result'        => $result,
-             'recommendation' => $recommendation,
-         ];
-     }
- 
-     /**
-      * Runs font readability check.
-      *
-      * @return array An array containing the result and recommendation.
-      */
-     public function run_font_readability_check() {
-         $default_font_size  = '16px'; // Recommended base font size
-         $default_line_height = '1.5'; // Recommended line height for readability
- 
-         // Check theme's customizer settings (if theme supports it)
-         $font_size_set    = get_theme_mod( 'font_size_base', $default_font_size );
-         $line_height_set  = get_theme_mod( 'line_height_base', $default_line_height );
- 
-         $result         = ( ( $font_size_set === $default_font_size ) && ( $line_height_set === $default_line_height ) ) ? esc_html__( 'Good', 'text-domain' ) : esc_html__( 'Needs Attention', 'text-domain' );
-         $recommendation = ( 'Good' === $result )
-             ? esc_html__( 'Font size and line spacing meet readability standards.', 'text-domain' )
-             : esc_html__( 'Consider adjusting font size and line spacing to improve readability.', 'text-domain' );
- 
-         return [
-             'result'        => $result,
-             'recommendation' => $recommendation,
-         ];
-     }
+    /**
+     * Runs navigation clarity check.
+     *
+     * @since  1.0.0
+     * @return array An array containing the result and recommendation.
+     */
+    public function run_navigation_clarity_check() {
+        global $wpdb;
+
+        $orphaned_pages = $wpdb->get_var(
+            $wpdb->prepare(
+                "
+                SELECT COUNT(*)
+                FROM {$wpdb->posts} AS p
+                LEFT JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
+                WHERE p.post_type = %s
+                    AND p.post_status = %s
+                    AND NOT EXISTS (
+                        SELECT * FROM {$wpdb->posts} AS p2
+                        WHERE p2.post_content LIKE %s
+                            AND p2.ID <> p.ID
+                    )
+                ",
+                'page',
+                'publish',
+                '%' . $wpdb->esc_like( p.post_name ) . '%'
+            )
+        );
+
+        $result         = ( $orphaned_pages > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
+        $recommendation = ( $orphaned_pages > 0 )
+            ? wp_kses_post(
+                sprintf(
+                    /* translators: %s: number of orphaned pages */
+                    __( 'Detected <strong>%s pages</strong> might be orphaned with no incoming links. Consider improving navigation or linking these pages.', 'site-vitals-wp' ),
+                    absint( $orphaned_pages )
+                )
+            )
+            : esc_html__( 'Navigation clarity is good, with no orphaned pages detected.', 'site-vitals-wp' );
+
+        return [
+            'result'        => $result,
+            'recommendation' => $recommendation,
+        ];
+    }
+
+    /**
+     * Runs accessibility check.
+     *
+     * @since  1.0.0
+     * @return array An array containing the result and recommendation.
+     */
+    public function run_accessibility_check() {
+        global $wpdb;
+
+        $missing_alts = $wpdb->get_var(
+            $wpdb->prepare(
+                "
+                SELECT COUNT(*)
+                FROM {$wpdb->posts} AS p
+                LEFT JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id AND pm.meta_key = %s
+                WHERE p.post_type = %s
+                    AND p.post_mime_type LIKE %s
+                    AND (pm.meta_value IS NULL OR pm.meta_value = '')
+                ",
+                '_wp_attachment_image_alt',
+                'attachment',
+                'image/%'
+            )
+        );
+
+        $result         = ( 0 === intval( $missing_alts ) ) ? esc_html__( 'Good', 'site-vitals-wp' ) : esc_html__( 'Needs Improvement', 'site-vitals-wp' );
+        $recommendation = ( 0 === intval( $missing_alts ) )
+            ? esc_html__( 'All images have alt tags, which helps meet accessibility standards.', 'site-vitals-wp' )
+            : wp_kses_post(
+                sprintf(
+                    /* translators: %s: number of images missing alt tags */
+                    __( '<strong>%s images</strong> are missing alt tags. Add descriptive alt tags to improve accessibility.', 'site-vitals-wp' ),
+                    absint( $missing_alts )
+                )
+            );
+
+        return [
+            'result'        => $result,
+            'recommendation' => $recommendation,
+        ];
+    }
+
+    /**
+     * Runs 404 error check.
+     *
+     * @since  1.0.0
+     * @return array An array containing the result and recommendation.
+     */
+    public function run_404_error_check() {
+        $pages_to_check = [
+            home_url( '/nonexistent-page' ),
+            home_url( '/broken-link' ),
+        ];
+
+        $error_count = 0;
+        foreach ( $pages_to_check as $url ) {
+            $response = wp_remote_head( $url );
+            if ( ! is_wp_error( $response ) && 404 === intval( wp_remote_retrieve_response_code( $response ) ) ) {
+                $error_count++;
+            }
+        }
+
+        $result         = ( $error_count > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
+        $recommendation = ( $error_count > 0 )
+            ? wp_kses_post(
+                sprintf(
+                    /* translators: %s: number of 404 error pages */
+                    __( 'Detected <strong>%s pages</strong> returning 404 errors. Ensure no broken links or missing pages.', 'site-vitals-wp' ),
+                    absint( $error_count )
+                )
+            )
+            : esc_html__( 'No 404 error pages detected, navigation is clear.', 'site-vitals-wp' );
+
+        return [
+            'result'        => $result,
+            'recommendation' => $recommendation,
+        ];
+    }
+
+    /**
+     * Runs page load time check.
+     *
+     * @since  1.0.0
+     * @return array An array containing the result and recommendation.
+    */
+    public function run_page_load_time_check() {
+        $url        = home_url();
+        $start_time = microtime( true );
+        $response   = wp_remote_get( $url );
+        $load_time  = microtime( true ) - $start_time;
+
+        $threshold      = 2; // Set load time threshold in seconds
+        $result         = ( $load_time > $threshold ) ? esc_html__( 'Needs Improvement', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
+        $recommendation = ( $load_time > $threshold )
+            ? wp_kses_post(
+                sprintf(
+                    /* translators: %s: homepage load time in seconds */
+                    __( 'Homepage load time is <strong>%s seconds</strong>. Consider optimizing images or enabling caching.', 'site-vitals-wp' ),
+                    esc_html( round( $load_time, 2 ) )
+                )
+            )
+            : esc_html__( 'Homepage load time is optimal.', 'site-vitals-wp' );
+
+        return [
+            'result'        => $result,
+            'recommendation' => $recommendation,
+        ];
+    }
+
+    /**
+     * Runs font readability check.
+     *
+     * @since  1.0.0
+     * @return array An array containing the result and recommendation.
+     */
+    public function run_font_readability_check() {
+        $default_font_size  = '16px';
+        $default_line_height = '1.5';
+
+        // Check theme's customizer settings (if theme supports it).
+        $font_size_set   = get_theme_mod( 'font_size_base', $default_font_size );
+        $line_height_set = get_theme_mod( 'line_height_base', $default_line_height );
+
+        $result         = ( ( $font_size_set === $default_font_size ) && ( $line_height_set === $default_line_height ) ) ? esc_html__( 'Good', 'site-vitals-wp' ) : esc_html__( 'Needs Attention', 'site-vitals-wp' );
+        $recommendation = ( 'Good' === $result )
+            ? esc_html__( 'Font size and line spacing meet readability standards.', 'site-vitals-wp' )
+            : esc_html__( 'Consider adjusting font size and line spacing to improve readability.', 'site-vitals-wp' );
+
+        return [
+            'result'        => $result,
+            'recommendation' => $recommendation,
+        ];
+    }
  
      /**
       * Content Management
@@ -892,16 +926,16 @@ class Site_Vitals_For_WordPress {
              "
          );
  
-         $result         = ( $stale_posts > 0 ) ? esc_html__( 'Needs Attention', 'text-domain' ) : esc_html__( 'Good', 'text-domain' );
+         $result         = ( $stale_posts > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
          $recommendation = ( $stale_posts > 0 )
              ? wp_kses_post(
                  sprintf(
                      /* translators: %s: number of stale posts */
-                     __( '<strong>%s posts</strong> have not been updated in over a year. Consider updating or reviewing for relevance.', 'text-domain' ),
+                     __( '<strong>%s posts</strong> have not been updated in over a year. Consider updating or reviewing for relevance.', 'site-vitals-wp' ),
                      absint( $stale_posts )
                  )
              )
-             : esc_html__( 'All posts have been updated recently.', 'text-domain' );
+             : esc_html__( 'All posts have been updated recently.', 'site-vitals-wp' );
  
          return [
              'result'        => $result,
@@ -939,16 +973,16 @@ class Site_Vitals_For_WordPress {
              }
          }
  
-         $result         = ( $broken_links > 0 ) ? esc_html__( 'Needs Attention', 'text-domain' ) : esc_html__( 'Good', 'text-domain' );
+         $result         = ( $broken_links > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
          $recommendation = ( $broken_links > 0 )
              ? wp_kses_post(
                  sprintf(
                      /* translators: %s: number of broken links */
-                     __( '<strong>%s broken links</strong> found. Consider updating or removing these links.', 'text-domain' ),
+                     __( '<strong>%s broken links</strong> found. Consider updating or removing these links.', 'site-vitals-wp' ),
                      absint( $broken_links )
                  )
              )
-             : esc_html__( 'No broken links detected.', 'text-domain' );
+             : esc_html__( 'No broken links detected.', 'site-vitals-wp' );
  
          return [
              'result'        => $result,
@@ -974,16 +1008,16 @@ class Site_Vitals_For_WordPress {
              300
          );
  
-         $result         = ( $short_posts > 0 ) ? esc_html__( 'Needs Attention', 'text-domain' ) : esc_html__( 'Good', 'text-domain' );
+         $result         = ( $short_posts > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
          $recommendation = ( $short_posts > 0 )
              ? wp_kses_post(
                  sprintf(
                      /* translators: %s: number of short posts */
-                     __( '<strong>%s posts</strong> have short content. Consider adding more detail or value to these posts.', 'text-domain' ),
+                     __( '<strong>%s posts</strong> have short content. Consider adding more detail or value to these posts.', 'site-vitals-wp' ),
                      absint( $short_posts )
                  )
              )
-             : esc_html__( 'All posts meet the recommended content length.', 'text-domain' );
+             : esc_html__( 'All posts meet the recommended content length.', 'site-vitals-wp' );
  
          return [
              'result'        => $result,
@@ -1017,16 +1051,16 @@ class Site_Vitals_For_WordPress {
          );
  
          $missing_media_count = $total_posts - $posts_with_media;
-         $result              = ( $missing_media_count > 0 ) ? esc_html__( 'Needs Attention', 'text-domain' ) : esc_html__( 'Good', 'text-domain' );
+         $result              = ( $missing_media_count > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
          $recommendation      = ( $missing_media_count > 0 )
              ? wp_kses_post(
                  sprintf(
                      /* translators: %s: number of posts missing featured images */
-                     __( '<strong>%s posts</strong> are missing featured images. Consider adding media to enrich content.', 'text-domain' ),
+                     __( '<strong>%s posts</strong> are missing featured images. Consider adding media to enrich content.', 'site-vitals-wp' ),
                      absint( $missing_media_count )
                  )
              )
-             : esc_html__( 'All posts include featured images or media.', 'text-domain' );
+             : esc_html__( 'All posts include featured images or media.', 'site-vitals-wp' );
  
          return [
              'result'        => $result,
@@ -1055,16 +1089,16 @@ class Site_Vitals_For_WordPress {
              "
          );
  
-         $result         = ( $duplicate_titles > 0 ) ? esc_html__( 'Needs Attention', 'text-domain' ) : esc_html__( 'Good', 'text-domain' );
+         $result         = ( $duplicate_titles > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
          $recommendation = ( $duplicate_titles > 0 )
              ? wp_kses_post(
                  sprintf(
                      /* translators: %s: number of duplicate titles */
-                     __( '<strong>%s posts</strong> have duplicate titles. Consider making each title unique for better SEO.', 'text-domain' ),
+                     __( '<strong>%s posts</strong> have duplicate titles. Consider making each title unique for better SEO.', 'site-vitals-wp' ),
                      absint( $duplicate_titles )
                  )
              )
-             : esc_html__( 'No duplicate titles detected.', 'text-domain' );
+             : esc_html__( 'No duplicate titles detected.', 'site-vitals-wp' );
  
          return [
              'result'        => $result,
@@ -1094,16 +1128,16 @@ class Site_Vitals_For_WordPress {
              20
          );
  
-         $result         = ( $high_revision_posts > 0 ) ? esc_html__( 'Needs Attention', 'text-domain' ) : esc_html__( 'Good', 'text-domain' );
+         $result         = ( $high_revision_posts > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
          $recommendation = ( $high_revision_posts > 0 )
              ? wp_kses_post(
                  sprintf(
                      /* translators: %s: number of posts with excessive revisions */
-                     __( '<strong>%s posts</strong> have excessive revisions. Consider cleaning up to optimize the database.', 'text-domain' ),
+                     __( '<strong>%s posts</strong> have excessive revisions. Consider cleaning up to optimize the database.', 'site-vitals-wp' ),
                      absint( $high_revision_posts )
                  )
              )
-             : esc_html__( 'Revision count is within an acceptable range.', 'text-domain' );
+             : esc_html__( 'Revision count is within an acceptable range.', 'site-vitals-wp' );
  
          return [
              'result'        => $result,
@@ -1132,16 +1166,16 @@ class Site_Vitals_For_WordPress {
              'publish'
          );
  
-         $result         = ( $untagged_posts > 0 ) ? esc_html__( 'Needs Attention', 'text-domain' ) : esc_html__( 'Good', 'text-domain' );
+         $result         = ( $untagged_posts > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
          $recommendation = ( $untagged_posts > 0 )
              ? wp_kses_post(
                  sprintf(
                      /* translators: %s: number of posts missing categories or tags */
-                     __( '<strong>%s posts</strong> are missing categories or tags. Consider categorizing/tagging them for better organization.', 'text-domain' ),
+                     __( '<strong>%s posts</strong> are missing categories or tags. Consider categorizing/tagging them for better organization.', 'site-vitals-wp' ),
                      absint( $untagged_posts )
                  )
              )
-             : esc_html__( 'All posts are categorized or tagged.', 'text-domain' );
+             : esc_html__( 'All posts are categorized or tagged.', 'site-vitals-wp' );
  
          return [
              'result'        => $result,
@@ -1217,10 +1251,10 @@ class Site_Vitals_For_WordPress {
             return is_plugin_active( $plugin );
         } );
 
-        $result         = empty( $active_cache_plugins ) ? esc_html__( 'No Caching Detected', 'text-domain' ) : esc_html__( 'Caching Active', 'text-domain' );
+        $result         = empty( $active_cache_plugins ) ? esc_html__( 'No Caching Detected', 'site-vitals-wp' ) : esc_html__( 'Caching Active', 'site-vitals-wp' );
         $recommendation = empty( $active_cache_plugins )
-            ? esc_html__( 'Consider installing a caching plugin to improve performance.', 'text-domain' )
-            : esc_html__( 'Caching is active, which helps improve performance.', 'text-domain' );
+            ? esc_html__( 'Consider installing a caching plugin to improve performance.', 'site-vitals-wp' )
+            : esc_html__( 'Caching is active, which helps improve performance.', 'site-vitals-wp' );
 
         return [
             'result'         => $result,
@@ -1236,12 +1270,12 @@ class Site_Vitals_For_WordPress {
     public function run_php_version_check() {
         $current_version    = phpversion();
         $recommended_version = '8.0';
-        $result             = version_compare( $current_version, $recommended_version, '>=' ) ? esc_html__( 'Good', 'text-domain' ) : esc_html__( 'Needs Attention', 'text-domain' );
+        $result             = version_compare( $current_version, $recommended_version, '>=' ) ? esc_html__( 'Good', 'site-vitals-wp' ) : esc_html__( 'Needs Attention', 'site-vitals-wp' );
         $recommendation     = ( 'Good' === $result )
-            ? esc_html__( 'PHP version is up to date.', 'text-domain' )
+            ? esc_html__( 'PHP version is up to date.', 'site-vitals-wp' )
             : sprintf(
                 /* translators: %1$s: current PHP version, %2$s: recommended PHP version */
-                __( 'Current PHP version is %1$s. Consider upgrading to PHP %2$s or higher.', 'text-domain' ),
+                __( 'Current PHP version is %1$s. Consider upgrading to PHP %2$s or higher.', 'site-vitals-wp' ),
                 esc_html( $current_version ),
                 esc_html( $recommended_version )
             );
@@ -1276,15 +1310,15 @@ class Site_Vitals_For_WordPress {
 
         $needs_optimization = ( $transient_count > 100 || $revision_count > 100 );
 
-        $result         = $needs_optimization ? esc_html__( 'Needs Optimization', 'text-domain' ) : esc_html__( 'Good', 'text-domain' );
+        $result         = $needs_optimization ? esc_html__( 'Needs Optimization', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
         $recommendation = $needs_optimization
             ? sprintf(
                 /* translators: %1$d: number of transients, %2$d: number of revisions */
-                __( 'Database optimization recommended: %1$d transients and %2$d post revisions detected.', 'text-domain' ),
+                __( 'Database optimization recommended: %1$d transients and %2$d post revisions detected.', 'site-vitals-wp' ),
                 absint( $transient_count ),
                 absint( $revision_count )
             )
-            : esc_html__( 'Database is optimized.', 'text-domain' );
+            : esc_html__( 'Database is optimized.', 'site-vitals-wp' );
 
         return [
             'result'        => $result,
@@ -1300,12 +1334,12 @@ class Site_Vitals_For_WordPress {
     public function run_max_upload_size_check() {
         $max_upload_size  = wp_max_upload_size();
         $recommended_size = 10 * 1024 * 1024; // 10 MB
-        $result           = ( $max_upload_size >= $recommended_size ) ? esc_html__( 'Good', 'text-domain' ) : esc_html__( 'Needs Attention', 'text-domain' );
+        $result           = ( $max_upload_size >= $recommended_size ) ? esc_html__( 'Good', 'site-vitals-wp' ) : esc_html__( 'Needs Attention', 'site-vitals-wp' );
         $recommendation   = ( 'Good' === $result )
-            ? esc_html__( 'Max upload size is sufficient.', 'text-domain' )
+            ? esc_html__( 'Max upload size is sufficient.', 'site-vitals-wp' )
             : sprintf(
                 /* translators: %s: formatted max upload size, %s: recommended size */
-                __( 'Current max upload size is %1$s. Consider increasing it for larger media files.', 'text-domain' ),
+                __( 'Current max upload size is %1$s. Consider increasing it for larger media files.', 'site-vitals-wp' ),
                 esc_html( size_format( $max_upload_size ) ),
                 esc_html( size_format( $recommended_size ) )
             );
@@ -1324,12 +1358,12 @@ class Site_Vitals_For_WordPress {
     public function run_memory_limit_check() {
         $memory_limit       = wp_convert_hr_to_bytes( WP_MEMORY_LIMIT );
         $recommended_limit  = 128 * 1024 * 1024; // 128 MB
-        $result             = ( $memory_limit >= $recommended_limit ) ? esc_html__( 'Good', 'text-domain' ) : esc_html__( 'Needs Attention', 'text-domain' );
+        $result             = ( $memory_limit >= $recommended_limit ) ? esc_html__( 'Good', 'site-vitals-wp' ) : esc_html__( 'Needs Attention', 'site-vitals-wp' );
         $recommendation     = ( 'Good' === $result )
-            ? esc_html__( 'Memory limit is sufficient.', 'text-domain' )
+            ? esc_html__( 'Memory limit is sufficient.', 'site-vitals-wp' )
             : sprintf(
                 /* translators: %s: formatted memory limit, %s: recommended memory limit */
-                __( 'Current memory limit is %1$s. Consider increasing it to at least %2$s.', 'text-domain' ),
+                __( 'Current memory limit is %1$s. Consider increasing it to at least %2$s.', 'site-vitals-wp' ),
                 esc_html( size_format( $memory_limit ) ),
                 esc_html( size_format( $recommended_limit ) )
             );
@@ -1347,10 +1381,10 @@ class Site_Vitals_For_WordPress {
      */
     public function run_gzip_compression_check() {
         $compression_enabled = isset( $_SERVER['HTTP_ACCEPT_ENCODING'] ) && strpos( $_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip' ) !== false;
-        $result               = $compression_enabled ? esc_html__( 'Good', 'text-domain' ) : esc_html__( 'Needs Attention', 'text-domain' );
+        $result               = $compression_enabled ? esc_html__( 'Good', 'site-vitals-wp' ) : esc_html__( 'Needs Attention', 'site-vitals-wp' );
         $recommendation       = $compression_enabled
-            ? esc_html__( 'Gzip compression is enabled, which helps reduce page load time.', 'text-domain' )
-            : esc_html__( 'Gzip compression is not enabled. Consider enabling it for faster load times.', 'text-domain' );
+            ? esc_html__( 'Gzip compression is enabled, which helps reduce page load time.', 'site-vitals-wp' )
+            : esc_html__( 'Gzip compression is not enabled. Consider enabling it for faster load times.', 'site-vitals-wp' );
 
         return [
             'result'        => $result,
@@ -1382,12 +1416,12 @@ class Site_Vitals_For_WordPress {
         ] );
 
         $count        = count( $images_without_alt );
-        $result       = ( 0 === $count ) ? esc_html__( 'Good', 'text-domain' ) : esc_html__( 'Needs Attention', 'text-domain' );
+        $result       = ( 0 === $count ) ? esc_html__( 'Good', 'site-vitals-wp' ) : esc_html__( 'Needs Attention', 'site-vitals-wp' );
         $recommendation = ( 0 === $count )
-            ? esc_html__( 'All images have alt text.', 'text-domain' )
+            ? esc_html__( 'All images have alt text.', 'site-vitals-wp' )
             : sprintf(
                 /* translators: %d: number of images missing alt text */
-                __( '<strong>%d images</strong> are missing alt text. Add descriptive alt text for accessibility.', 'text-domain' ),
+                __( '<strong>%d images</strong> are missing alt text. Add descriptive alt text for accessibility.', 'site-vitals-wp' ),
                 absint( $count )
             );
 
@@ -1404,8 +1438,8 @@ class Site_Vitals_For_WordPress {
      */
     public function run_color_contrast_check() {
         // Placeholder - requires custom scanning of site elements or a third-party service
-        $result         = esc_html__( 'Unchecked', 'text-domain' );
-        $recommendation = esc_html__( 'Use a contrast checker to ensure text is readable against its background color.', 'text-domain' );
+        $result         = esc_html__( 'Unchecked', 'site-vitals-wp' );
+        $recommendation = esc_html__( 'Use a contrast checker to ensure text is readable against its background color.', 'site-vitals-wp' );
 
         return [
             'result'        => $result,
@@ -1419,8 +1453,8 @@ class Site_Vitals_For_WordPress {
      * @return array An array containing the result and recommendation.
      */
     public function run_keyboard_navigation_check() {
-        $result         = esc_html__( 'Unchecked', 'text-domain' );
-        $recommendation = esc_html__( 'Ensure that all interactive elements are accessible via keyboard navigation.', 'text-domain' );
+        $result         = esc_html__( 'Unchecked', 'site-vitals-wp' );
+        $recommendation = esc_html__( 'Ensure that all interactive elements are accessible via keyboard navigation.', 'site-vitals-wp' );
 
         return [
             'result'        => $result,
@@ -1434,8 +1468,8 @@ class Site_Vitals_For_WordPress {
      * @return array An array containing the result and recommendation.
      */
     public function run_aria_roles_check() {
-        $result         = esc_html__( 'Unchecked', 'text-domain' );
-        $recommendation = esc_html__( 'Use appropriate ARIA roles and landmarks on major content areas for accessibility.', 'text-domain' );
+        $result         = esc_html__( 'Unchecked', 'site-vitals-wp' );
+        $recommendation = esc_html__( 'Use appropriate ARIA roles and landmarks on major content areas for accessibility.', 'site-vitals-wp' );
 
         return [
             'result'        => $result,
@@ -1464,12 +1498,12 @@ class Site_Vitals_For_WordPress {
             )
         );
 
-        $result         = ( 0 === $count ) ? esc_html__( 'Good', 'text-domain' ) : esc_html__( 'Needs Attention', 'text-domain' );
+        $result         = ( 0 === $count ) ? esc_html__( 'Good', 'site-vitals-wp' ) : esc_html__( 'Needs Attention', 'site-vitals-wp' );
         $recommendation = ( 0 === $count )
-            ? esc_html__( 'All form fields have labels.', 'text-domain' )
+            ? esc_html__( 'All form fields have labels.', 'site-vitals-wp' )
             : sprintf(
                 /* translators: %d: number of form fields missing labels */
-                __( '<strong>%d form fields</strong> are missing labels. Add labels to improve accessibility.', 'text-domain' ),
+                __( '<strong>%d form fields</strong> are missing labels. Add labels to improve accessibility.', 'site-vitals-wp' ),
                 absint( $count )
             );
 
@@ -1486,8 +1520,8 @@ class Site_Vitals_For_WordPress {
      */
     public function run_heading_structure_check() {
         // Placeholder - requires parsing content for heading levels
-        $result         = esc_html__( 'Unchecked', 'text-domain' );
-        $recommendation = esc_html__( 'Ensure headings follow a logical structure (e.g., H1 > H2 > H3) for accessibility.', 'text-domain' );
+        $result         = esc_html__( 'Unchecked', 'site-vitals-wp' );
+        $recommendation = esc_html__( 'Ensure headings follow a logical structure (e.g., H1 > H2 > H3) for accessibility.', 'site-vitals-wp' );
 
         return [
             'result'        => $result,
@@ -1514,12 +1548,12 @@ class Site_Vitals_For_WordPress {
             )
         );
 
-        $result         = ( 0 === $ambiguous_links ) ? esc_html__( 'Good', 'text-domain' ) : esc_html__( 'Needs Attention', 'text-domain' );
+        $result         = ( 0 === $ambiguous_links ) ? esc_html__( 'Good', 'site-vitals-wp' ) : esc_html__( 'Needs Attention', 'site-vitals-wp' );
         $recommendation = ( 0 === $ambiguous_links )
-            ? esc_html__( 'All links are descriptive.', 'text-domain' )
+            ? esc_html__( 'All links are descriptive.', 'site-vitals-wp' )
             : sprintf(
                 /* translators: %d: number of ambiguous links */
-                __( '<strong>%d links</strong> have ambiguous text. Use descriptive link text for accessibility.', 'text-domain' ),
+                __( '<strong>%d links</strong> have ambiguous text. Use descriptive link text for accessibility.', 'site-vitals-wp' ),
                 absint( $ambiguous_links )
             );
 
