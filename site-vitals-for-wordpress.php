@@ -10,7 +10,7 @@
   * @wordpress-plugin
   *
   * Plugin Name: Site Vitals for WordPress®
-  * Description: Monitor and improve the performance, security, and SEO health of your WordPress site.
+  * Description: Monitor and improve the performance, security, and SEO health of your WordPress® site.
   * Plugin URI:  https://github.com/robertdevore/site-vitals-for-wordpress/
   * Version:     1.0.0
   * Author:      Robert DeVore
@@ -45,13 +45,13 @@ define( 'SVWP_VERSION', '1.0.0' );
 class Site_Vitals_For_WordPress {
 
     private $categories = [
-        'performance' => 'Performance',
-        'security'    => 'Security',
-        'seo'         => 'SEO',
-        'ux'          => 'User Experience (UX)',
-        'content'     => 'Content Management',
-        'technical'   => 'Technical Config',
-        'compliance'  => 'Accessibility'
+        'performance' => esc_html__( 'Performance', 'site-vitals-wp' ),
+        'security'    => esc_html__( 'Security', 'site-vitals-wp' ),
+        'seo'         => esc_html__( 'SEO', 'site-vitals-wp' ),
+        'ux'          => esc_html__( 'User Experience (UX)', 'site-vitals-wp' ),
+        'content'     => esc_html__( 'Content Management', 'site-vitals-wp' ),
+        'technical'   => esc_html__( 'Technical Config', 'site-vitals-wp' ),
+        'compliance'  => esc_html__( 'Accessibility', 'site-vitals-wp' )
     ];
 
     /**
