@@ -64,6 +64,16 @@ class Site_Vitals_For_WordPress {
         require_once plugin_dir_path( __FILE__ ) . 'classes/Site_Vitals_Table.php';
     }
 
+    /**
+     * Retrieves the list of available categories.
+     *
+     * Each category corresponds to a set of checks that the plugin will run.
+     * Categories are defined in the plugin's constructor and are used to organize
+     * the checks into distinct groups (e.g., Performance, Security, SEO).
+     *
+     * @since  1.0.0
+     * @return array Associative array of category slugs and their corresponding labels.
+     */
     public function get_categories() {
         return $this->categories;
     }
@@ -126,9 +136,8 @@ class Site_Vitals_For_WordPress {
                 $this->display_category_summary( $slug, $label );
             }
 
-            echo '</div></div>'; // Close grid and wrap
+            echo '</div></div>';
         } else {
-            // Existing code for subpage
             $category_label = $this->categories[ $category ] ?? esc_html__( 'Site Vitals', 'site-vitals-wp' );
             echo '<div class="wrap">
                         <h1>' . esc_html( $category_label ) . '
@@ -215,7 +224,7 @@ class Site_Vitals_For_WordPress {
         $threshold         = 1;
         $result            = ( $average_load_time > $threshold ) ? esc_html__( 'Needs Improvement', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
         $recommendation    = ( $average_load_time > $threshold )
-            ? sprintf( esc_html__( 'Average homepage load time is %s seconds. Consider optimizing images, minifying assets, and enabling caching.', 'site-vitals-wp' ), round( $average_load_time, 2 ) )
+            ? sprintf( __( 'Average homepage load time is %s seconds. Consider optimizing images, minifying assets, and enabling caching.', 'site-vitals-wp' ), round( $average_load_time, 2 ) )
             : esc_html__( 'Average homepage load time is optimal.', 'site-vitals-wp' );
 
         return [
@@ -326,7 +335,7 @@ class Site_Vitals_For_WordPress {
 
         $result         = ( $response_time > $threshold ) ? esc_html__( 'Needs Improvement', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
         $recommendation = ( $response_time > $threshold )
-            ? sprintf( esc_html__( 'Server response time is %s seconds. Consider server optimizations or upgrading your hosting plan.', 'site-vitals-wp' ), round( $response_time, 2 ) )
+            ? sprintf( __( 'Server response time is %s seconds. Consider server optimizations or upgrading your hosting plan.', 'site-vitals-wp' ), round( $response_time, 2 ) )
             : esc_html__( 'Server response time is optimal.', 'site-vitals-wp' );
 
         return [
@@ -413,14 +422,14 @@ class Site_Vitals_For_WordPress {
             : wp_kses_post(
                 sprintf(
                     /* translators: %1$d: number of outdated themes, %2$s: list of outdated theme names */
-                    esc_html__( '<strong>%1$d outdated themes</strong> detected: %2$s. Update them to the latest version for security.', 'site-vitals-wp' ),
+                    __( '<strong>%1$d outdated themes</strong> detected: %2$s. Update them to the latest version for security.', 'site-vitals-wp' ),
                     absint( $theme_count ),
                     esc_html( implode( ', ', $outdated_themes ) )
                 )
             );
 
         return [
-            'result'        => $result,
+            'result'         => $result,
             'recommendation' => $recommendation,
         ];
     }
@@ -451,7 +460,7 @@ class Site_Vitals_For_WordPress {
             : esc_html__( 'WordPress core is up to date.', 'site-vitals-wp' );
 
         return [
-            'result'        => $result,
+            'result'         => $result,
             'recommendation' => $recommendation,
         ];
     }
@@ -470,7 +479,7 @@ class Site_Vitals_For_WordPress {
             : esc_html__( 'Consider enabling two-factor authentication for additional login security.', 'site-vitals-wp' );
 
         return [
-            'result'        => $result,
+            'result'         => $result,
             'recommendation' => $recommendation,
         ];
     }
@@ -507,7 +516,7 @@ class Site_Vitals_For_WordPress {
             );
 
         return [
-            'result'        => $result,
+            'result'         => $result,
             'recommendation' => $recommendation,
         ];
     }
@@ -574,7 +583,7 @@ class Site_Vitals_For_WordPress {
             : esc_html__( 'Ensure both title and description meta tags are set for optimal SEO.', 'site-vitals-wp' );
 
         return [
-            'result'        => $result,
+            'result'         => $result,
             'recommendation' => $recommendation,
         ];
     }
@@ -762,7 +771,7 @@ class Site_Vitals_For_WordPress {
             ? wp_kses_post(
                 sprintf(
                     /* translators: %s: number of orphaned pages */
-                    esc_html__( 'Detected <strong>%s pages</strong> might be orphaned with no incoming links. Consider improving navigation or linking these pages.', 'site-vitals-wp' ),
+                    __( 'Detected <strong>%s pages</strong> might be orphaned with no incoming links. Consider improving navigation or linking these pages.', 'site-vitals-wp' ),
                     absint( $orphaned_pages )
                 )
             )
@@ -805,7 +814,7 @@ class Site_Vitals_For_WordPress {
             : wp_kses_post(
                 sprintf(
                     /* translators: %s: number of images missing alt tags */
-                    esc_html__( '<strong>%s images</strong> are missing alt tags. Add descriptive alt tags to improve accessibility.', 'site-vitals-wp' ),
+                    __( '<strong>%s images</strong> are missing alt tags. Add descriptive alt tags to improve accessibility.', 'site-vitals-wp' ),
                     absint( $missing_alts )
                 )
             );
@@ -844,7 +853,7 @@ class Site_Vitals_For_WordPress {
             ? wp_kses_post(
                 sprintf(
                     /* translators: %s: number of 404 error pages */
-                    esc_html__( 'Detected <strong>%s pages</strong> returning 404 errors. Ensure no broken links or missing pages.', 'site-vitals-wp' ),
+                    __( 'Detected <strong>%s pages</strong> returning 404 errors. Ensure no broken links or missing pages.', 'site-vitals-wp' ),
                     absint( $error_count )
                 )
             )
@@ -874,7 +883,7 @@ class Site_Vitals_For_WordPress {
             ? wp_kses_post(
                 sprintf(
                     /* translators: %s: homepage load time in seconds */
-                    esc_html__( 'Homepage load time is <strong>%s seconds</strong>. Consider optimizing images or enabling caching.', 'site-vitals-wp' ),
+                    __( 'Homepage load time is <strong>%s seconds</strong>. Consider optimizing images or enabling caching.', 'site-vitals-wp' ),
                     esc_html( round( $load_time, 2 ) )
                 )
             )
@@ -934,7 +943,7 @@ class Site_Vitals_For_WordPress {
             ? wp_kses_post(
                 sprintf(
                     /* translators: %s: number of stale posts */
-                    esc_html__( '<strong>%s posts</strong> have not been updated in over a year. Consider updating or reviewing for relevance.', 'site-vitals-wp' ),
+                    __( '<strong>%s posts</strong> have not been updated in over a year. Consider updating or reviewing for relevance.', 'site-vitals-wp' ),
                     absint( $stale_posts )
                 )
             )
@@ -982,7 +991,7 @@ class Site_Vitals_For_WordPress {
             ? wp_kses_post(
                 sprintf(
                     /* translators: %s: number of broken links */
-                    esc_html__( '<strong>%s broken links</strong> found. Consider updating or removing these links.', 'site-vitals-wp' ),
+                    __( '<strong>%s broken links</strong> found. Consider updating or removing these links.', 'site-vitals-wp' ),
                     absint( $broken_links )
                 )
             )
@@ -1018,7 +1027,7 @@ class Site_Vitals_For_WordPress {
             ? wp_kses_post(
                 sprintf(
                     /* translators: %s: number of short posts */
-                    esc_html__( '<strong>%s posts</strong> have short content. Consider adding more detail or value to these posts.', 'site-vitals-wp' ),
+                    __( '<strong>%s posts</strong> have short content. Consider adding more detail or value to these posts.', 'site-vitals-wp' ),
                     absint( $short_posts )
                 )
             )
@@ -1062,7 +1071,7 @@ class Site_Vitals_For_WordPress {
             ? wp_kses_post(
                 sprintf(
                     /* translators: %s: number of posts missing featured images */
-                    esc_html__( '<strong>%s posts</strong> are missing featured images. Consider adding media to enrich content.', 'site-vitals-wp' ),
+                    __( '<strong>%s posts</strong> are missing featured images. Consider adding media to enrich content.', 'site-vitals-wp' ),
                     absint( $missing_media_count )
                 )
             )
@@ -1101,7 +1110,7 @@ class Site_Vitals_For_WordPress {
             ? wp_kses_post(
                 sprintf(
                     /* translators: %s: number of duplicate titles */
-                    esc_html__( '<strong>%s posts</strong> have duplicate titles. Consider making each title unique for better SEO.', 'site-vitals-wp' ),
+                    __( '<strong>%s posts</strong> have duplicate titles. Consider making each title unique for better SEO.', 'site-vitals-wp' ),
                     absint( $duplicate_titles )
                 )
             )
@@ -1141,7 +1150,7 @@ class Site_Vitals_For_WordPress {
             ? wp_kses_post(
                 sprintf(
                     /* translators: %s: number of posts with excessive revisions */
-                    esc_html__( '<strong>%s posts</strong> have excessive revisions. Consider cleaning up to optimize the database.', 'site-vitals-wp' ),
+                    __( '<strong>%s posts</strong> have excessive revisions. Consider cleaning up to optimize the database.', 'site-vitals-wp' ),
                     absint( $high_revision_posts )
                 )
             )
@@ -1180,7 +1189,7 @@ class Site_Vitals_For_WordPress {
             ? wp_kses_post(
                 sprintf(
                     /* translators: %s: number of posts missing categories or tags */
-                    esc_html__( '<strong>%s posts</strong> are missing categories or tags. Consider categorizing/tagging them for better organization.', 'site-vitals-wp' ),
+                    __( '<strong>%s posts</strong> are missing categories or tags. Consider categorizing/tagging them for better organization.', 'site-vitals-wp' ),
                     absint( $untagged_posts )
                 )
             )
@@ -1282,7 +1291,7 @@ class Site_Vitals_For_WordPress {
             ? esc_html__( 'PHP version is up to date.', 'site-vitals-wp' )
             : sprintf(
                 /* translators: %1$s: current PHP version, %2$s: recommended PHP version */
-                esc_html__( 'Current PHP version is %1$s. Consider upgrading to PHP %2$s or higher.', 'site-vitals-wp' ),
+                __( 'Current PHP version is %1$s. Consider upgrading to PHP %2$s or higher.', 'site-vitals-wp' ),
                 esc_html( $current_version ),
                 esc_html( $recommended_version )
             );
@@ -1322,7 +1331,7 @@ class Site_Vitals_For_WordPress {
         $recommendation = $needs_optimization
             ? sprintf(
                 /* translators: %1$d: number of transients, %2$d: number of revisions */
-                esc_html__( 'Database optimization recommended: %1$d transients and %2$d post revisions detected.', 'site-vitals-wp' ),
+                __( 'Database optimization recommended: %1$d transients and %2$d post revisions detected.', 'site-vitals-wp' ),
                 absint( $transient_count ),
                 absint( $revision_count )
             )
@@ -1348,7 +1357,7 @@ class Site_Vitals_For_WordPress {
             ? esc_html__( 'Max upload size is sufficient.', 'site-vitals-wp' )
             : sprintf(
                 /* translators: %s: formatted max upload size, %s: recommended size */
-                esc_html__( 'Current max upload size is %1$s. Consider increasing it for larger media files.', 'site-vitals-wp' ),
+                __( 'Current max upload size is %1$s. Consider increasing it for larger media files.', 'site-vitals-wp' ),
                 esc_html( size_format( $max_upload_size ) ),
                 esc_html( size_format( $recommended_size ) )
             );
@@ -1428,7 +1437,7 @@ class Site_Vitals_For_WordPress {
             ? esc_html__( 'All images have alt text.', 'site-vitals-wp' )
             : sprintf(
                 /* translators: %d: number of images missing alt text */
-                esc_html__( '<strong>%d images</strong> are missing alt text. Add descriptive alt text for accessibility.', 'site-vitals-wp' ),
+                __( '<strong>%d images</strong> are missing alt text. Add descriptive alt text for accessibility.', 'site-vitals-wp' ),
                 absint( $count )
             );
 
@@ -1514,7 +1523,7 @@ class Site_Vitals_For_WordPress {
             ? esc_html__( 'All form fields have labels.', 'site-vitals-wp' )
             : sprintf(
                 /* translators: %d: number of form fields missing labels */
-                esc_html__( '<strong>%d form fields</strong> are missing labels. Add labels to improve accessibility.', 'site-vitals-wp' ),
+                __( '<strong>%d form fields</strong> are missing labels. Add labels to improve accessibility.', 'site-vitals-wp' ),
                 absint( $count )
             );
 
@@ -1566,7 +1575,7 @@ class Site_Vitals_For_WordPress {
             ? esc_html__( 'All links are descriptive.', 'site-vitals-wp' )
             : sprintf(
                 /* translators: %d: number of ambiguous links */
-                esc_html__( '<strong>%d links</strong> have ambiguous text. Use descriptive link text for accessibility.', 'site-vitals-wp' ),
+                __( '<strong>%d links</strong> have ambiguous text. Use descriptive link text for accessibility.', 'site-vitals-wp' ),
                 absint( $ambiguous_links )
             );
 

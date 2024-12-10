@@ -6,7 +6,7 @@ From performance and security to SEO, user experience, and content management, t
 
 With asynchronous loading, cached results, and a user-friendly interface, Site Vitals for WordPress® ensures that you have a clear understanding of your site’s strengths and areas for improvement.
 
-Note: Accessibility (Compliance) checks are currently in development and will be introduced in a future release.
+_Note: Accessibility (Compliance) checks are currently in development and will be introduced in a future release._
 
 ## Table of Contents
 
@@ -142,7 +142,7 @@ A4: They are planned for a future release. The current version focuses on Perfor
 
 ## Contributing
 
-Contributions are welcome! If you'd like to improve **Site Vitals Checker**, please follow these steps:
+Contributions are welcome! If you'd like to improve **Site Vitals for WordPress®**, please follow these steps:
 
 1. **Fork the Repository:**
 
