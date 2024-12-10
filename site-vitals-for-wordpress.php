@@ -1692,13 +1692,27 @@ function site_vitals_get_category_data() {
     $danger_count  = 0;
 
     foreach ( $checks as $check ) {
-        $status = isset( $check['result'] ) ? $check['result'] : '';
-        if ( stripos( $status, 'good' ) !== false ) {
+        $status = isset( $check['result'] ) ? strtolower( $check['result'] ) : '';
+
+        if ( false !== strpos( $status, 'good' ) || false !== strpos( $status, 'caching active' ) ) {
+            // Good statuses.
             $good_count++;
-        } elseif ( stripos( $status, 'needs attention' ) !== false ) {
+        } elseif (
+            false !== strpos( $status, 'needs attention' ) ||
+            false !== strpos( $status, 'needs optimization' ) ||
+            false !== strpos( $status, 'no caching detected' ) ||
+            false !== strpos( $status, 'no seo plugins detected' ) ||
+            false !== strpos( $status, 'no sitemap found' ) ||
+            false !== strpos( $status, 'fair' )
+        ) {
+            // Warning statuses.
             $warning_count++;
-        } elseif ( stripos( $status, 'needs improvement' ) !== false ) {
+        } elseif ( false !== strpos( $status, 'needs improvement' ) ) {
+            // Danger statuses.
             $danger_count++;
+        } else {
+            // If something unexpected, treat as warning.
+            $warning_count++;
         }
     }
 

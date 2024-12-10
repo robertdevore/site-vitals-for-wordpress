@@ -1,120 +1,144 @@
 # Site Vitals for WordPress®
 
-**Site Vitals Checker** is a comprehensive WordPress plugin designed to monitor and evaluate various aspects of your website's health. From security and performance to SEO and accessibility, this plugin provides detailed insights and actionable recommendations to ensure your site runs smoothly and effectively.
+**Site Vitals for WordPress®** is a comprehensive WordPress plugin designed to monitor, evaluate, and improve various aspects of your website's health. 
+
+From performance and security to SEO, user experience, and content management, this free plugin offers actionable insights and recommendations. 
+
+With asynchronous loading, cached results, and a user-friendly interface, Site Vitals for WordPress® ensures that you have a clear understanding of your site’s strengths and areas for improvement.
+
+Note: Accessibility (Compliance) checks are currently in development and will be introduced in a future release.
 
 ## Table of Contents
 
 - [Features](#features)
-- [Installation](#installation)
 - [Usage](#usage)
+- [Filters and Extensibility](#filters-and-extensibility)
 - [Frequently Asked Questions](#frequently-asked-questions)
 - [Contributing](#contributing)
 - [License](#license)
-- [Contact](#contact)
 
 ## Features
 
-**Site Vitals Checker** offers a wide range of checks to help you maintain and improve your website:
+**Site Vitals for WordPress®** performs a wide range of checks, grouped into categories. The plugin runs these checks automatically on activation and caches the results for a faster, smoother experience.
 
 ### Security Checks
 
-- **SSL Certificate Check**: Verifies if SSL is enabled on your site.
-- **Plugin Update Check**: Identifies outdated plugins that need updates.
-- **Theme Update Check**: Detects outdated themes requiring updates.
-- **WordPress Core Update Check**: Ensures your WordPress core is up to date.
-- **Login Security Check**: Checks if two-factor authentication is enabled.
-- **Security Headers Check**: Validates the presence of essential security headers.
-- **File Permissions Check**: Reviews file permissions for critical files.
+- **SSL Certificate Check**: Ensures SSL is enabled for secure browsing.
+- **Plugin/Theme/Core Update Checks**: Alerts you to outdated components needing updates.
+- **Login Security Check**: Checks for two-factor authentication usage.
+- **Security Headers Check**: Verifies recommended security headers are present.
+- **File Permissions Check**: Confirms critical files have secure permissions.
 
 ### SEO Checks
 
-- **SEO Meta Tags Check**: Ensures title and meta description tags are set.
-- **SEO Plugin Detection**: Detects active SEO plugins installed on your site.
-- **Image Alt Text Check**: Identifies images missing alt text.
-- **Sitemap Check**: Verifies the existence of sitemaps for better indexing.
+- **SEO Meta Tags Check**: Validates the presence of title and description meta tags.
+- **SEO Plugin Detection**: Identifies if an SEO plugin is active.
+- **Image Alt Text Check**: Detects images lacking alt text.
+- **Sitemap Check**: Confirms the presence of a sitemap for better indexing.
 
 ### Performance Checks
 
-- **Caching Status Check**: Detects active caching plugins to improve site speed.
-- **PHP Version Check**: Ensures your server is running a recommended PHP version.
-- **Database Optimization Check**: Identifies transients and revisions that may require cleanup.
-- **Max Upload Size Check**: Checks if the maximum upload size is sufficient.
-- **Memory Limit Check**: Verifies if the PHP memory limit meets the recommended threshold.
-- **Gzip Compression Check**: Confirms if Gzip compression is enabled for faster load times.
+- **Page Load Speed & Server Response Time**: Measures homepage load time and server response.
+- **Image Optimization Check**: Finds oversized images that could slow down the site.
+- **Code Optimization Check**: Flags excessive CSS/JS files.
+- **Third-Party Scripts Check**: Identifies slow external scripts.
+- **Database Optimization Check**: Checks for excessive transients and revisions.
+- **Caching Status Check**: Determines if a caching plugin is active.
+- **Gzip Compression & PHP Version Checks**: Ensures your environment is configured for optimal performance.
 
-### Accessibility Checks
+### User Experience (UX) Checks
 
-- **Alt Text for Images Check**: Ensures all images have descriptive alt text.
-- **Color Contrast Check**: Placeholder for verifying color contrast ratios.
-- **Keyboard Navigation Check**: Placeholder for ensuring keyboard accessibility.
-- **ARIA Roles and Landmarks Check**: Placeholder for validating ARIA roles.
-- **Form Labels Check**: Identifies forms missing labels for accessibility.
-- **Heading Structure Check**: Placeholder for verifying logical heading structures.
-- **Link Descriptions Check**: Detects ambiguous link texts that need improvement.
+- **Mobile Responsiveness Check**: Verifies theme responsiveness for mobile devices.
+- **Navigation Clarity Check**: Detects orphaned pages.
+- **404 Error Check**: Identifies broken links resulting in 404 pages.
+- **Page Load Time (Key Pages) & Font Readability**: Reviews load times and typography standards.
 
-### Content Management
+### Content Management Checks
 
-- **Content Freshness Check**: Identifies stale posts not updated in over a year.
-- **Broken Links Check**: Scans for broken links within your content.
-- **Content Length Check**: Detects posts with insufficient content length.
-- **Media Usage Check**: Identifies posts missing featured images.
-- **Duplicate Content Check**: Finds posts with duplicate titles.
-- **Revision Count Check**: Detects posts with excessive revisions.
-- **Taxonomy Usage Check**: Identifies posts missing categories or tags.
+- **Content Freshness & Broken Links**: Finds stale posts and broken links.
+- **Content Length & Media Usage**: Flags short posts and posts missing featured images.
+- **Duplicate Content & Revision Count Checks**: Identifies duplicate titles and excessive revisions.
+- **Taxonomy Usage Check**: Ensures posts are categorized or tagged.
 
-## Installation
+_(Accessibility/Compliance checks are planned for a future update.)_
 
 1. **Download the Plugin:**
 
-    - Clone the repository:
-        ```
-        git clone https://github.com/yourusername/site-vitals-checker.git
-        ```
-
-    - Or download the ZIP file from GitHub and extract it.
+    - Download the plugin ZIP from the [GitHub repository](https://github.com/robertdevore/site-vitals-for-wordpress/).
 2. **Upload to WordPress:**
 
-    - Via FTP:
-        - Upload the `site-vitals-checker` folder to the `/wp-content/plugins/` directory.
-    - Or via WordPress Dashboard:
-        - Navigate to `Plugins > Add New > Upload Plugin`.
-        - Choose the ZIP file and click `Install Now`.
+    - **Via WordPress Dashboard:**
+        - Go to `Plugins > Add New`.
+        - Click `Upload Plugin`.
+        - Select the downloaded ZIP file and click `Install Now`.
+    - **Via FTP:**
+        - Unzip the downloaded file.
+        - Upload the `site-vitals-for-wordpress` folder to `/wp-content/plugins/`.
 3. **Activate the Plugin:**
 
     - Go to `Plugins > Installed Plugins`.
-    - Find **Site Vitals Checker** and click `Activate`.
+    - Find **Site Vitals for WordPress®** and click `Activate`.
+
+Upon activation, the plugin immediately runs checks and caches the results for quick subsequent loads.
 
 ## Usage
 
-1. **Accessing the Plugin:**
+1. **Accessing the Dashboard:**
 
-    - After activation, navigate to `Dashboard > Site Vitals Checker`.
-2. **Running Checks:**
+    - Navigate to `Dashboard > Site Vitals`.
+    - You'll see a grid of categories (Performance, Security, SEO, UX, Content, Technical).
+    - Each category initially shows a loading indicator and then fetches results asynchronously to prevent slow page loads.
+2. **Reviewing Checks:**
 
-    - The plugin automatically runs all checks upon activation.
-    - To manually run a check, go to the respective section and click `Run Check`.
-3. **Viewing Results:**
+    - Once results are loaded, you'll see color-coded summaries:
+        - Green ("Good")
+        - Yellow ("Needs Attention")
+        - Red ("Needs Improvement")
+    - Click any category's submenu item (e.g., `Site Vitals > Performance`) to view detailed checks and recommendations.
+3. **Follow Recommendations:**
 
-    - Results are displayed in categorized summaries.
-    - Each check shows a status (`Good`, `Needs Attention`, etc.) and provides recommendations.
-4. **Interpreting Recommendations:**
+    - For each check, you'll find actionable advice--e.g., optimize images, update plugins, or add missing alt text.
+    - Implementing these suggestions helps maintain and improve site health over time.
+4. **Caching and Re-checks:**
 
-    - Follow the actionable recommendations to improve your site's health.
-    - For placeholder checks (e.g., Color Contrast), consider integrating third-party services or custom implementations.
+    - Results are cached for about 12 hours. After making improvements, return later to see updated results.
+    - The asynchronous loading and caching ensure minimal impact on your site's performance.
+
+## Filters and Extensibility
+
+Developers can adjust certain checks using filters:
+
+- **`sv_common_sitemap_urls`**: Modify the array of sitemap URLs checked.
+```
+add_filter( 'sv_common_sitemap_urls', function( $urls ) {
+    $urls[] = home_url( '/custom-sitemap.xml' );
+    return $urls;
+} );
+```
+
+- **`sv_404_pages_to_check`**: Change the set of pages checked for 404 errors.
+```
+add_filter( 'sv_404_pages_to_check', function( $pages ) {
+    $pages[] = home_url( '/another-test-page' );
+    return $pages;
+} );
+```
+
+These filters allow advanced users to customize checks for their specific site setup.
 
 ## Frequently Asked Questions
 
-**Q1: Does this plugin affect site performance?**  
-A1: The plugin is optimized to run efficiently. However, some checks, like broken link scans, may be resource-intensive. It's recommended to run such checks during off-peak hours or implement caching mechanisms.
+**Q1: Will these checks slow down my site?**  
+A1: The plugin caches results and uses asynchronous loading to minimize performance impact. Most checks run efficiently, and the initial comprehensive run is done at activation.
 
-**Q2: How often should I run these checks?**  
-A2: For optimal site health, run security and performance checks weekly, and content-related checks monthly. Automated scheduling can be implemented for regular monitoring.
+**Q2: How often should I check my site's vitals?**  
+A2: Since results are cached, checking once or twice a week is sufficient for most sites. After making improvements, wait for the cache to refresh (12 hours) before reviewing updates.
 
 **Q3: Can I disable specific checks?**  
-A3: Currently, all checks are enabled by default. Future updates may include options to enable or disable specific checks based on your requirements.
+A3: Not currently. All checks run as a set. Future updates may provide more granular control.
 
-**Q4: Is this plugin compatible with all WordPress themes and plugins?**  
-A4: The plugin is designed to be compatible with most WordPress themes and plugins. However, conflicts may arise with custom or poorly coded themes/plugins. It's recommended to test the plugin in a staging environment before deploying it on a live site.
+**Q4: Are Accessibility (Compliance) checks available?**  
+A4: They are planned for a future release. The current version focuses on Performance, Security, SEO, UX, and Content.
 
 ## Contributing
 
@@ -151,3 +175,5 @@ Contributions are welcome! If you'd like to improve **Site Vitals Checker**, ple
     - Navigate to the original repository and click `Compare & pull request`.
 
 ## License
+
+This plugin is open-source software licensed under the GPL-2.0+ license.
