@@ -44,23 +44,28 @@ define( 'SVWP_VERSION', '1.0.0' );
 
 class Site_Vitals_For_WordPress {
 
-    private $categories = [
-        'performance' => esc_html__( 'Performance', 'site-vitals-wp' ),
-        'security'    => esc_html__( 'Security', 'site-vitals-wp' ),
-        'seo'         => esc_html__( 'SEO', 'site-vitals-wp' ),
-        'ux'          => esc_html__( 'User Experience (UX)', 'site-vitals-wp' ),
-        'content'     => esc_html__( 'Content Management', 'site-vitals-wp' ),
-        'technical'   => esc_html__( 'Technical Config', 'site-vitals-wp' ),
-        'compliance'  => esc_html__( 'Accessibility', 'site-vitals-wp' )
-    ];
+    private $categories;
 
     /**
      * Constructor.
      */
     public function __construct() {
+        $this->categories = [
+            'performance' => esc_html__( 'Performance', 'site-vitals-wp' ),
+            'security'    => esc_html__( 'Security', 'site-vitals-wp' ),
+            'seo'         => esc_html__( 'SEO', 'site-vitals-wp' ),
+            'ux'          => esc_html__( 'User Experience (UX)', 'site-vitals-wp' ),
+            'content'     => esc_html__( 'Content Management', 'site-vitals-wp' ),
+            'technical'   => esc_html__( 'Technical Config', 'site-vitals-wp' ),
+            //'compliance'  => esc_html__( 'Accessibility', 'site-vitals-wp' ), // @TODO COMING SOON
+        ];
         add_action( 'admin_menu', [ $this, 'add_admin_menu' ] );
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
         require_once plugin_dir_path( __FILE__ ) . 'classes/Site_Vitals_Table.php';
+    }
+
+    public function get_categories() {
+        return $this->categories;
     }
 
     /**
@@ -102,10 +107,10 @@ class Site_Vitals_For_WordPress {
      * @since  1.0.0
      * @return void
      */
-    public function settings_page( $category = 'performance' ) {
-        if ( is_null( $category ) ) {
-            // Display overview dashboard for all categories.
-            echo '<div class="wrap"><h1>' . esc_html__( 'Site Vitals Dashboard', 'site-vitals-wp' ) . '
+    public function settings_page( $category = null ) {
+        if ( is_null( $category ) || '' === $category ) {
+            echo '<div class="wrap">
+            <h1>' . esc_html( 'Site Vitals', 'site-vitals-wp' ) . '
                 <a id="site-vitals-support-btn" href="https://robertdevore.com/contact/" target="_blank" class="button button-alt" style="margin-left: 10px;">
                     <span class="dashicons dashicons-format-chat" style="vertical-align: middle;"></span> ' . esc_html__( 'Support', 'site-vitals-wp' ) . '
                 </a>
@@ -113,15 +118,20 @@ class Site_Vitals_For_WordPress {
                     <span class="dashicons dashicons-media-document" style="vertical-align: middle;"></span> ' . esc_html__( 'Documentation', 'site-vitals-wp' ) . '
                 </a>
             </h1><hr />';
+
+            // Create a grid container for category summaries
+            echo '<div class="site-vitals-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:20px;">';
 
             foreach ( $this->categories as $slug => $label ) {
                 $this->display_category_summary( $slug, $label );
             }
 
-            echo '</div>';
+            echo '</div></div>'; // Close grid and wrap
         } else {
+            // Existing code for subpage
             $category_label = $this->categories[ $category ] ?? esc_html__( 'Site Vitals', 'site-vitals-wp' );
-            echo '<div class="wrap"><h1>' . esc_html( $category_label ) . '
+            echo '<div class="wrap">
+                        <h1>' . esc_html( $category_label ) . '
                 <a id="site-vitals-support-btn" href="https://robertdevore.com/contact/" target="_blank" class="button button-alt" style="margin-left: 10px;">
                     <span class="dashicons dashicons-format-chat" style="vertical-align: middle;"></span> ' . esc_html__( 'Support', 'site-vitals-wp' ) . '
                 </a>
@@ -129,8 +139,6 @@ class Site_Vitals_For_WordPress {
                     <span class="dashicons dashicons-media-document" style="vertical-align: middle;"></span> ' . esc_html__( 'Documentation', 'site-vitals-wp' ) . '
                 </a>
             </h1><hr />';
-
-            echo '<p>' . sprintf( esc_html__( 'Review the site vitals for %s.', 'site-vitals-wp' ), strtolower( esc_html( $category_label ) ) ) . '</p>';
 
             if ( isset( $this->categories[ $category ] ) ) {
                 $this->display_category_table( $category );
@@ -171,6 +179,9 @@ class Site_Vitals_For_WordPress {
 
         wp_enqueue_style( 'site-vitals-css', plugin_dir_url( __FILE__ ) . 'assets/css/admin.css' );
         wp_enqueue_script( 'site-vitals-js', plugin_dir_url( __FILE__ ) . 'assets/js/admin.js', [ 'jquery' ], null, true );
+        wp_localize_script( 'site-vitals-js', 'siteVitals', [
+            'nonce' => wp_create_nonce('site_vitals_nonce')
+        ] );
     }
 
     /**
@@ -324,8 +335,6 @@ class Site_Vitals_For_WordPress {
         ];
     }
 
-    // Security Checks
-
     /**
      * Runs SSL certificate check.
      *
@@ -404,7 +413,7 @@ class Site_Vitals_For_WordPress {
             : wp_kses_post(
                 sprintf(
                     /* translators: %1$d: number of outdated themes, %2$s: list of outdated theme names */
-                    __( '<strong>%1$d outdated themes</strong> detected: %2$s. Update them to the latest version for security.', 'site-vitals-wp' ),
+                    esc_html__( '<strong>%1$d outdated themes</strong> detected: %2$s. Update them to the latest version for security.', 'site-vitals-wp' ),
                     absint( $theme_count ),
                     esc_html( implode( ', ', $outdated_themes ) )
                 )
@@ -538,10 +547,6 @@ class Site_Vitals_For_WordPress {
     }
 
     /**
-     * SEO Checks
-     */
-
-    /**
      * Runs SEO meta tags check.
      *
      * @since  1.0.0
@@ -553,7 +558,7 @@ class Site_Vitals_For_WordPress {
 
         if ( is_wp_error( $response ) ) {
             return [
-                'result'        => esc_html__( 'Error', 'site-vitals-wp' ),
+                'result'         => esc_html__( 'Error', 'site-vitals-wp' ),
                 'recommendation' => esc_html__( 'Unable to fetch homepage for SEO check. Please verify the server status.', 'site-vitals-wp' ),
             ];
         }
@@ -680,6 +685,9 @@ class Site_Vitals_For_WordPress {
             home_url( '/wp-sitemap.xml' ),
         ];
 
+        // Filter the sitemap URL's.
+        $common_sitemap_urls = apply_filters( 'sv_common_sitemap_urls', $common_sitemap_urls );
+
         $sitemap_found = false;
 
         foreach ( $common_sitemap_urls as $sitemap_url ) {
@@ -701,10 +709,6 @@ class Site_Vitals_For_WordPress {
             'recommendation' => $recommendation,
         ];
     }
-
-    /**
-     * UX
-     */
 
     /**
      * Runs mobile responsiveness check.
@@ -744,13 +748,12 @@ class Site_Vitals_For_WordPress {
                     AND p.post_status = %s
                     AND NOT EXISTS (
                         SELECT * FROM {$wpdb->posts} AS p2
-                        WHERE p2.post_content LIKE %s
+                        WHERE p2.post_content LIKE CONCAT('%', p.post_name, '%')
                             AND p2.ID <> p.ID
                     )
                 ",
                 'page',
-                'publish',
-                '%' . $wpdb->esc_like( p.post_name ) . '%'
+                'publish'
             )
         );
 
@@ -759,14 +762,14 @@ class Site_Vitals_For_WordPress {
             ? wp_kses_post(
                 sprintf(
                     /* translators: %s: number of orphaned pages */
-                    __( 'Detected <strong>%s pages</strong> might be orphaned with no incoming links. Consider improving navigation or linking these pages.', 'site-vitals-wp' ),
+                    esc_html__( 'Detected <strong>%s pages</strong> might be orphaned with no incoming links. Consider improving navigation or linking these pages.', 'site-vitals-wp' ),
                     absint( $orphaned_pages )
                 )
             )
             : esc_html__( 'Navigation clarity is good, with no orphaned pages detected.', 'site-vitals-wp' );
 
         return [
-            'result'        => $result,
+            'result'         => $result,
             'recommendation' => $recommendation,
         ];
     }
@@ -802,7 +805,7 @@ class Site_Vitals_For_WordPress {
             : wp_kses_post(
                 sprintf(
                     /* translators: %s: number of images missing alt tags */
-                    __( '<strong>%s images</strong> are missing alt tags. Add descriptive alt tags to improve accessibility.', 'site-vitals-wp' ),
+                    esc_html__( '<strong>%s images</strong> are missing alt tags. Add descriptive alt tags to improve accessibility.', 'site-vitals-wp' ),
                     absint( $missing_alts )
                 )
             );
@@ -825,6 +828,9 @@ class Site_Vitals_For_WordPress {
             home_url( '/broken-link' ),
         ];
 
+        // Filter the pages.
+        $pages_to_check = apply_filters( 'sv_404_pages_to_check', $pages_to_check );
+
         $error_count = 0;
         foreach ( $pages_to_check as $url ) {
             $response = wp_remote_head( $url );
@@ -838,14 +844,14 @@ class Site_Vitals_For_WordPress {
             ? wp_kses_post(
                 sprintf(
                     /* translators: %s: number of 404 error pages */
-                    __( 'Detected <strong>%s pages</strong> returning 404 errors. Ensure no broken links or missing pages.', 'site-vitals-wp' ),
+                    esc_html__( 'Detected <strong>%s pages</strong> returning 404 errors. Ensure no broken links or missing pages.', 'site-vitals-wp' ),
                     absint( $error_count )
                 )
             )
             : esc_html__( 'No 404 error pages detected, navigation is clear.', 'site-vitals-wp' );
 
         return [
-            'result'        => $result,
+            'result'         => $result,
             'recommendation' => $recommendation,
         ];
     }
@@ -868,14 +874,14 @@ class Site_Vitals_For_WordPress {
             ? wp_kses_post(
                 sprintf(
                     /* translators: %s: homepage load time in seconds */
-                    __( 'Homepage load time is <strong>%s seconds</strong>. Consider optimizing images or enabling caching.', 'site-vitals-wp' ),
+                    esc_html__( 'Homepage load time is <strong>%s seconds</strong>. Consider optimizing images or enabling caching.', 'site-vitals-wp' ),
                     esc_html( round( $load_time, 2 ) )
                 )
             )
             : esc_html__( 'Homepage load time is optimal.', 'site-vitals-wp' );
 
         return [
-            'result'        => $result,
+            'result'         => $result,
             'recommendation' => $recommendation,
         ];
     }
@@ -887,7 +893,7 @@ class Site_Vitals_For_WordPress {
      * @return array An array containing the result and recommendation.
      */
     public function run_font_readability_check() {
-        $default_font_size  = '16px';
+        $default_font_size   = '16px';
         $default_line_height = '1.5';
 
         // Check theme's customizer settings (if theme supports it).
@@ -900,296 +906,296 @@ class Site_Vitals_For_WordPress {
             : esc_html__( 'Consider adjusting font size and line spacing to improve readability.', 'site-vitals-wp' );
 
         return [
-            'result'        => $result,
+            'result'         => $result,
+            'recommendation' => $recommendation,
+        ];
+    }
+
+    /**
+     * Runs content freshness check.
+     *
+     * @since  1.0.0
+     * @return array An array containing the result and recommendation.
+     */
+    public function run_content_freshness_check() {
+        global $wpdb;
+
+        $stale_posts = $wpdb->get_var(
+            "
+            SELECT COUNT(*) FROM {$wpdb->posts}
+            WHERE post_type = 'post'
+                AND post_status = 'publish'
+                AND post_modified < (NOW() - INTERVAL 1 YEAR)
+            "
+        );
+
+        $result         = ( $stale_posts > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
+        $recommendation = ( $stale_posts > 0 )
+            ? wp_kses_post(
+                sprintf(
+                    /* translators: %s: number of stale posts */
+                    esc_html__( '<strong>%s posts</strong> have not been updated in over a year. Consider updating or reviewing for relevance.', 'site-vitals-wp' ),
+                    absint( $stale_posts )
+                )
+            )
+            : esc_html__( 'All posts have been updated recently.', 'site-vitals-wp' );
+
+        return [
+            'result'         => $result,
             'recommendation' => $recommendation,
         ];
     }
  
-     /**
-      * Content Management
-      */
- 
-     /**
-      * Runs content freshness check.
-      *
-      * @return array An array containing the result and recommendation.
-      */
-     public function run_content_freshness_check() {
-         global $wpdb;
- 
-         $stale_posts = $wpdb->get_var(
-             "
-             SELECT COUNT(*) FROM {$wpdb->posts}
-             WHERE post_type = 'post'
-                 AND post_status = 'publish'
-                 AND post_modified < (NOW() - INTERVAL 1 YEAR)
-             "
-         );
- 
-         $result         = ( $stale_posts > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
-         $recommendation = ( $stale_posts > 0 )
-             ? wp_kses_post(
-                 sprintf(
-                     /* translators: %s: number of stale posts */
-                     __( '<strong>%s posts</strong> have not been updated in over a year. Consider updating or reviewing for relevance.', 'site-vitals-wp' ),
-                     absint( $stale_posts )
-                 )
-             )
-             : esc_html__( 'All posts have been updated recently.', 'site-vitals-wp' );
- 
-         return [
-             'result'        => $result,
-             'recommendation' => $recommendation,
-         ];
-     }
- 
-     /**
-      * Runs broken links check.
-      *
-      * @return array An array containing the result and recommendation.
-      */
-     public function run_broken_links_check() {
-         global $wpdb;
- 
-         $post_links = $wpdb->get_results(
-             "
-             SELECT ID, post_content FROM {$wpdb->posts}
-             WHERE post_type = 'post' AND post_status = 'publish'
-             ",
-             OBJECT
-         );
- 
-         $broken_links = 0;
-         foreach ( $post_links as $post ) {
-             preg_match_all( '/href=["\']?([^"\'>]+)["\']?/', $post->post_content, $matches );
-             foreach ( $matches[1] as $link ) {
-                 // Validate URL
-                 if ( filter_var( $link, FILTER_VALIDATE_URL ) ) {
-                     $response = wp_remote_head( $link );
-                     if ( is_wp_error( $response ) || 404 === intval( wp_remote_retrieve_response_code( $response ) ) ) {
-                         $broken_links++;
-                     }
-                 }
-             }
-         }
- 
-         $result         = ( $broken_links > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
-         $recommendation = ( $broken_links > 0 )
-             ? wp_kses_post(
-                 sprintf(
-                     /* translators: %s: number of broken links */
-                     __( '<strong>%s broken links</strong> found. Consider updating or removing these links.', 'site-vitals-wp' ),
-                     absint( $broken_links )
-                 )
-             )
-             : esc_html__( 'No broken links detected.', 'site-vitals-wp' );
- 
-         return [
-             'result'        => $result,
-             'recommendation' => $recommendation,
-         ];
-     }
- 
-     /**
-      * Runs content length check.
-      *
-      * @return array An array containing the result and recommendation.
-      */
-     public function run_content_length_check() {
-         global $wpdb;
- 
-         $short_posts = $wpdb->get_var(
-             "
-             SELECT COUNT(*) FROM {$wpdb->posts}
-             WHERE post_type = 'post'
-                 AND post_status = 'publish'
-                 AND LENGTH( post_content ) < %d
-             ",
-             300
-         );
- 
-         $result         = ( $short_posts > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
-         $recommendation = ( $short_posts > 0 )
-             ? wp_kses_post(
-                 sprintf(
-                     /* translators: %s: number of short posts */
-                     __( '<strong>%s posts</strong> have short content. Consider adding more detail or value to these posts.', 'site-vitals-wp' ),
-                     absint( $short_posts )
-                 )
-             )
-             : esc_html__( 'All posts meet the recommended content length.', 'site-vitals-wp' );
- 
-         return [
-             'result'        => $result,
-             'recommendation' => $recommendation,
-         ];
-     }
- 
-     /**
-      * Runs media usage check.
-      *
-      * @return array An array containing the result and recommendation.
-      */
-     public function run_media_usage_check() {
-         global $wpdb;
- 
-         $posts_with_media = $wpdb->get_var(
-             "
-             SELECT COUNT(DISTINCT post_id)
-             FROM {$wpdb->postmeta}
-             WHERE meta_key = %s
-             ",
-             '_thumbnail_id'
-         );
- 
-         $total_posts           = $wpdb->get_var(
-             "
-             SELECT COUNT(*)
-             FROM {$wpdb->posts}
-             WHERE post_type = 'post' AND post_status = 'publish'
-             "
-         );
- 
-         $missing_media_count = $total_posts - $posts_with_media;
-         $result              = ( $missing_media_count > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
-         $recommendation      = ( $missing_media_count > 0 )
-             ? wp_kses_post(
-                 sprintf(
-                     /* translators: %s: number of posts missing featured images */
-                     __( '<strong>%s posts</strong> are missing featured images. Consider adding media to enrich content.', 'site-vitals-wp' ),
-                     absint( $missing_media_count )
-                 )
-             )
-             : esc_html__( 'All posts include featured images or media.', 'site-vitals-wp' );
- 
-         return [
-             'result'        => $result,
-             'recommendation' => $recommendation,
-         ];
-     }
- 
-     /**
-      * Runs duplicate content check.
-      *
-      * @return array An array containing the result and recommendation.
-      */
-     public function run_duplicate_content_check() {
-         global $wpdb;
- 
-         $duplicate_titles = $wpdb->get_var(
-             "
-             SELECT COUNT(*)
-             FROM (
-                 SELECT post_title
-                 FROM {$wpdb->posts}
-                 WHERE post_type = 'post' AND post_status = 'publish'
-                 GROUP BY post_title
-                 HAVING COUNT( post_title ) > 1
-             ) AS duplicates
-             "
-         );
- 
-         $result         = ( $duplicate_titles > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
-         $recommendation = ( $duplicate_titles > 0 )
-             ? wp_kses_post(
-                 sprintf(
-                     /* translators: %s: number of duplicate titles */
-                     __( '<strong>%s posts</strong> have duplicate titles. Consider making each title unique for better SEO.', 'site-vitals-wp' ),
-                     absint( $duplicate_titles )
-                 )
-             )
-             : esc_html__( 'No duplicate titles detected.', 'site-vitals-wp' );
- 
-         return [
-             'result'        => $result,
-             'recommendation' => $recommendation,
-         ];
-     }
- 
-     /**
-      * Runs revision count check.
-      *
-      * @return array An array containing the result and recommendation.
-      */
-     public function run_revision_count_check() {
-         global $wpdb;
- 
-         $high_revision_posts = $wpdb->get_var(
-             "
-             SELECT COUNT(*)
-             FROM (
-                 SELECT post_parent
-                 FROM {$wpdb->posts}
-                 WHERE post_type = 'revision'
-                 GROUP BY post_parent
-                 HAVING COUNT( ID ) > %d
-             ) AS excessive_revisions
-             ",
-             20
-         );
- 
-         $result         = ( $high_revision_posts > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
-         $recommendation = ( $high_revision_posts > 0 )
-             ? wp_kses_post(
-                 sprintf(
-                     /* translators: %s: number of posts with excessive revisions */
-                     __( '<strong>%s posts</strong> have excessive revisions. Consider cleaning up to optimize the database.', 'site-vitals-wp' ),
-                     absint( $high_revision_posts )
-                 )
-             )
-             : esc_html__( 'Revision count is within an acceptable range.', 'site-vitals-wp' );
- 
-         return [
-             'result'        => $result,
-             'recommendation' => $recommendation,
-         ];
-     }
- 
-     /**
-      * Runs taxonomy usage check.
-      *
-      * @return array An array containing the result and recommendation.
-      */
-     public function run_taxonomy_usage_check() {
-         global $wpdb;
- 
-         $untagged_posts = $wpdb->get_var(
-             "
-             SELECT COUNT(*)
-             FROM {$wpdb->posts} p
-             LEFT JOIN {$wpdb->term_relationships} tr ON ( p.ID = tr.object_id )
-             WHERE p.post_type = %s
-                 AND p.post_status = %s
-                 AND tr.term_taxonomy_id IS NULL
-             ",
-             'post',
-             'publish'
-         );
- 
-         $result         = ( $untagged_posts > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
-         $recommendation = ( $untagged_posts > 0 )
-             ? wp_kses_post(
-                 sprintf(
-                     /* translators: %s: number of posts missing categories or tags */
-                     __( '<strong>%s posts</strong> are missing categories or tags. Consider categorizing/tagging them for better organization.', 'site-vitals-wp' ),
-                     absint( $untagged_posts )
-                 )
-             )
-             : esc_html__( 'All posts are categorized or tagged.', 'site-vitals-wp' );
- 
-         return [
-             'result'        => $result,
-             'recommendation' => $recommendation,
-         ];
-     }
- 
     /**
-     * Technical Config
+     * Runs broken links check.
+     *
+     * @since  1.0.0
+     * @return array An array containing the result and recommendation.
      */
+    public function run_broken_links_check() {
+        global $wpdb;
+
+        $post_links = $wpdb->get_results(
+            "
+            SELECT ID, post_content FROM {$wpdb->posts}
+            WHERE post_type = 'post' AND post_status = 'publish'
+            ",
+            OBJECT
+        );
+
+        $broken_links = 0;
+        foreach ( $post_links as $post ) {
+            preg_match_all( '/href=["\']?([^"\'>]+)["\']?/', $post->post_content, $matches );
+            foreach ( $matches[1] as $link ) {
+                // Validate URL.
+                if ( filter_var( $link, FILTER_VALIDATE_URL ) ) {
+                    $response = wp_remote_head( $link );
+                    if ( is_wp_error( $response ) || 404 === intval( wp_remote_retrieve_response_code( $response ) ) ) {
+                        $broken_links++;
+                    }
+                }
+            }
+        }
+
+        $result         = ( $broken_links > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
+        $recommendation = ( $broken_links > 0 )
+            ? wp_kses_post(
+                sprintf(
+                    /* translators: %s: number of broken links */
+                    esc_html__( '<strong>%s broken links</strong> found. Consider updating or removing these links.', 'site-vitals-wp' ),
+                    absint( $broken_links )
+                )
+            )
+            : esc_html__( 'No broken links detected.', 'site-vitals-wp' );
+
+        return [
+            'result'         => $result,
+            'recommendation' => $recommendation,
+        ];
+    }
+
+    /**
+     * Runs content length check.
+     *
+     * @since  1.0.0
+     * @return array An array containing the result and recommendation.
+     */
+    public function run_content_length_check() {
+        global $wpdb;
+
+        $short_posts = $wpdb->get_var(
+            "
+            SELECT COUNT(*) FROM {$wpdb->posts}
+            WHERE post_type = 'post'
+                AND post_status = 'publish'
+                AND LENGTH( post_content ) < %d
+            ",
+            300
+        );
+
+        $result         = ( $short_posts > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
+        $recommendation = ( $short_posts > 0 )
+            ? wp_kses_post(
+                sprintf(
+                    /* translators: %s: number of short posts */
+                    esc_html__( '<strong>%s posts</strong> have short content. Consider adding more detail or value to these posts.', 'site-vitals-wp' ),
+                    absint( $short_posts )
+                )
+            )
+            : esc_html__( 'All posts meet the recommended content length.', 'site-vitals-wp' );
+
+        return [
+            'result'         => $result,
+            'recommendation' => $recommendation,
+        ];
+    }
+
+    /**
+     * Runs media usage check.
+     *
+     * @since  1.0.0
+     * @return array An array containing the result and recommendation.
+     */
+    public function run_media_usage_check() {
+        global $wpdb;
+
+        $posts_with_media = $wpdb->get_var(
+            "
+            SELECT COUNT(DISTINCT post_id)
+            FROM {$wpdb->postmeta}
+            WHERE meta_key = %s
+            ",
+            '_thumbnail_id'
+        );
+
+        $total_posts = $wpdb->get_var(
+            "
+            SELECT COUNT(*)
+            FROM {$wpdb->posts}
+            WHERE post_type = 'post' AND post_status = 'publish'
+            "
+        );
+
+        $missing_media_count = $total_posts - $posts_with_media;
+        $result              = ( $missing_media_count > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
+        $recommendation      = ( $missing_media_count > 0 )
+            ? wp_kses_post(
+                sprintf(
+                    /* translators: %s: number of posts missing featured images */
+                    esc_html__( '<strong>%s posts</strong> are missing featured images. Consider adding media to enrich content.', 'site-vitals-wp' ),
+                    absint( $missing_media_count )
+                )
+            )
+            : esc_html__( 'All posts include featured images or media.', 'site-vitals-wp' );
+
+        return [
+            'result'         => $result,
+            'recommendation' => $recommendation,
+        ];
+    }
+
+    /**
+     * Runs duplicate content check.
+     *
+     * @since  1.0.0
+     * @return array An array containing the result and recommendation.
+     */
+    public function run_duplicate_content_check() {
+        global $wpdb;
+
+        $duplicate_titles = $wpdb->get_var(
+            "
+            SELECT COUNT(*)
+            FROM (
+                SELECT post_title
+                FROM {$wpdb->posts}
+                WHERE post_type = 'post' AND post_status = 'publish'
+                GROUP BY post_title
+                HAVING COUNT( post_title ) > 1
+            ) AS duplicates
+            "
+        );
+
+        $result         = ( $duplicate_titles > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
+        $recommendation = ( $duplicate_titles > 0 )
+            ? wp_kses_post(
+                sprintf(
+                    /* translators: %s: number of duplicate titles */
+                    esc_html__( '<strong>%s posts</strong> have duplicate titles. Consider making each title unique for better SEO.', 'site-vitals-wp' ),
+                    absint( $duplicate_titles )
+                )
+            )
+            : esc_html__( 'No duplicate titles detected.', 'site-vitals-wp' );
+
+        return [
+            'result'         => $result,
+            'recommendation' => $recommendation,
+        ];
+    }
+
+    /**
+     * Runs revision count check.
+     *
+     * @since  1.0.0
+     * @return array An array containing the result and recommendation.
+     */
+    public function run_revision_count_check() {
+        global $wpdb;
+
+        $high_revision_posts = $wpdb->get_var(
+            "
+            SELECT COUNT(*)
+            FROM (
+                SELECT post_parent
+                FROM {$wpdb->posts}
+                WHERE post_type = 'revision'
+                GROUP BY post_parent
+                HAVING COUNT( ID ) > %d
+            ) AS excessive_revisions
+            ",
+            20
+        );
+
+        $result         = ( $high_revision_posts > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
+        $recommendation = ( $high_revision_posts > 0 )
+            ? wp_kses_post(
+                sprintf(
+                    /* translators: %s: number of posts with excessive revisions */
+                    esc_html__( '<strong>%s posts</strong> have excessive revisions. Consider cleaning up to optimize the database.', 'site-vitals-wp' ),
+                    absint( $high_revision_posts )
+                )
+            )
+            : esc_html__( 'Revision count is within an acceptable range.', 'site-vitals-wp' );
+
+        return [
+            'result'         => $result,
+            'recommendation' => $recommendation,
+        ];
+    }
+
+    /**
+     * Runs taxonomy usage check.
+     *
+     * @since  1.0.0
+     * @return array An array containing the result and recommendation.
+     */
+    public function run_taxonomy_usage_check() {
+        global $wpdb;
+
+        $untagged_posts = $wpdb->get_var(
+            "
+            SELECT COUNT(*)
+            FROM {$wpdb->posts} p
+            LEFT JOIN {$wpdb->term_relationships} tr ON ( p.ID = tr.object_id )
+            WHERE p.post_type = %s
+                AND p.post_status = %s
+                AND tr.term_taxonomy_id IS NULL
+            ",
+            'post',
+            'publish'
+        );
+
+        $result         = ( $untagged_posts > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
+        $recommendation = ( $untagged_posts > 0 )
+            ? wp_kses_post(
+                sprintf(
+                    /* translators: %s: number of posts missing categories or tags */
+                    esc_html__( '<strong>%s posts</strong> are missing categories or tags. Consider categorizing/tagging them for better organization.', 'site-vitals-wp' ),
+                    absint( $untagged_posts )
+                )
+            )
+            : esc_html__( 'All posts are categorized or tagged.', 'site-vitals-wp' );
+
+        return [
+            'result'         => $result,
+            'recommendation' => $recommendation,
+        ];
+    }
 
     /**
      * Caching Status Check
      *
+     * @since  1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_caching_status_check() {
@@ -1265,23 +1271,24 @@ class Site_Vitals_For_WordPress {
     /**
      * PHP Version Check
      *
+     * @since  1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_php_version_check() {
-        $current_version    = phpversion();
+        $current_version     = phpversion();
         $recommended_version = '8.0';
-        $result             = version_compare( $current_version, $recommended_version, '>=' ) ? esc_html__( 'Good', 'site-vitals-wp' ) : esc_html__( 'Needs Attention', 'site-vitals-wp' );
-        $recommendation     = ( 'Good' === $result )
+        $result              = version_compare( $current_version, $recommended_version, '>=' ) ? esc_html__( 'Good', 'site-vitals-wp' ) : esc_html__( 'Needs Attention', 'site-vitals-wp' );
+        $recommendation      = ( 'Good' === $result )
             ? esc_html__( 'PHP version is up to date.', 'site-vitals-wp' )
             : sprintf(
                 /* translators: %1$s: current PHP version, %2$s: recommended PHP version */
-                __( 'Current PHP version is %1$s. Consider upgrading to PHP %2$s or higher.', 'site-vitals-wp' ),
+                esc_html__( 'Current PHP version is %1$s. Consider upgrading to PHP %2$s or higher.', 'site-vitals-wp' ),
                 esc_html( $current_version ),
                 esc_html( $recommended_version )
             );
 
         return [
-            'result'        => $result,
+            'result'         => $result,
             'recommendation' => $recommendation,
         ];
     }
@@ -1289,6 +1296,7 @@ class Site_Vitals_For_WordPress {
     /**
      * Database Optimization Check
      *
+     * @since  1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_database_optimization_check() {
@@ -1314,14 +1322,14 @@ class Site_Vitals_For_WordPress {
         $recommendation = $needs_optimization
             ? sprintf(
                 /* translators: %1$d: number of transients, %2$d: number of revisions */
-                __( 'Database optimization recommended: %1$d transients and %2$d post revisions detected.', 'site-vitals-wp' ),
+                esc_html__( 'Database optimization recommended: %1$d transients and %2$d post revisions detected.', 'site-vitals-wp' ),
                 absint( $transient_count ),
                 absint( $revision_count )
             )
             : esc_html__( 'Database is optimized.', 'site-vitals-wp' );
 
         return [
-            'result'        => $result,
+            'result'         => $result,
             'recommendation' => $recommendation,
         ];
     }
@@ -1329,6 +1337,7 @@ class Site_Vitals_For_WordPress {
     /**
      * Max Upload Size Check
      *
+     * @since  1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_max_upload_size_check() {
@@ -1339,13 +1348,13 @@ class Site_Vitals_For_WordPress {
             ? esc_html__( 'Max upload size is sufficient.', 'site-vitals-wp' )
             : sprintf(
                 /* translators: %s: formatted max upload size, %s: recommended size */
-                __( 'Current max upload size is %1$s. Consider increasing it for larger media files.', 'site-vitals-wp' ),
+                esc_html__( 'Current max upload size is %1$s. Consider increasing it for larger media files.', 'site-vitals-wp' ),
                 esc_html( size_format( $max_upload_size ) ),
                 esc_html( size_format( $recommended_size ) )
             );
 
         return [
-            'result'        => $result,
+            'result'         => $result,
             'recommendation' => $recommendation,
         ];
     }
@@ -1353,6 +1362,7 @@ class Site_Vitals_For_WordPress {
     /**
      * Memory Limit Check
      *
+     * @since  1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_memory_limit_check() {
@@ -1369,7 +1379,7 @@ class Site_Vitals_For_WordPress {
             );
 
         return [
-            'result'        => $result,
+            'result'         => $result,
             'recommendation' => $recommendation,
         ];
     }
@@ -1377,24 +1387,21 @@ class Site_Vitals_For_WordPress {
     /**
      * Gzip Compression Check
      *
+     * @since  1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_gzip_compression_check() {
         $compression_enabled = isset( $_SERVER['HTTP_ACCEPT_ENCODING'] ) && strpos( $_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip' ) !== false;
-        $result               = $compression_enabled ? esc_html__( 'Good', 'site-vitals-wp' ) : esc_html__( 'Needs Attention', 'site-vitals-wp' );
-        $recommendation       = $compression_enabled
+        $result              = $compression_enabled ? esc_html__( 'Good', 'site-vitals-wp' ) : esc_html__( 'Needs Attention', 'site-vitals-wp' );
+        $recommendation      = $compression_enabled
             ? esc_html__( 'Gzip compression is enabled, which helps reduce page load time.', 'site-vitals-wp' )
             : esc_html__( 'Gzip compression is not enabled. Consider enabling it for faster load times.', 'site-vitals-wp' );
 
         return [
-            'result'        => $result,
+            'result'         => $result,
             'recommendation' => $recommendation,
         ];
     }
-
-    /**
-     * Accessibility
-     */
 
     /**
      * Alt Text for Images Check
@@ -1415,18 +1422,18 @@ class Site_Vitals_For_WordPress {
             'fields'          => 'ids',
         ] );
 
-        $count        = count( $images_without_alt );
-        $result       = ( 0 === $count ) ? esc_html__( 'Good', 'site-vitals-wp' ) : esc_html__( 'Needs Attention', 'site-vitals-wp' );
+        $count          = count( $images_without_alt );
+        $result         = ( 0 === $count ) ? esc_html__( 'Good', 'site-vitals-wp' ) : esc_html__( 'Needs Attention', 'site-vitals-wp' );
         $recommendation = ( 0 === $count )
             ? esc_html__( 'All images have alt text.', 'site-vitals-wp' )
             : sprintf(
                 /* translators: %d: number of images missing alt text */
-                __( '<strong>%d images</strong> are missing alt text. Add descriptive alt text for accessibility.', 'site-vitals-wp' ),
+                esc_html__( '<strong>%d images</strong> are missing alt text. Add descriptive alt text for accessibility.', 'site-vitals-wp' ),
                 absint( $count )
             );
 
         return [
-            'result'        => $result,
+            'result'         => $result,
             'recommendation' => $recommendation,
         ];
     }
@@ -1434,6 +1441,7 @@ class Site_Vitals_For_WordPress {
     /**
      * Color Contrast Check (basic placeholder)
      *
+     * @since  1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_color_contrast_check() {
@@ -1442,7 +1450,7 @@ class Site_Vitals_For_WordPress {
         $recommendation = esc_html__( 'Use a contrast checker to ensure text is readable against its background color.', 'site-vitals-wp' );
 
         return [
-            'result'        => $result,
+            'result'         => $result,
             'recommendation' => $recommendation,
         ];
     }
@@ -1450,6 +1458,7 @@ class Site_Vitals_For_WordPress {
     /**
      * Keyboard Navigation Check
      *
+     * @since  1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_keyboard_navigation_check() {
@@ -1457,7 +1466,7 @@ class Site_Vitals_For_WordPress {
         $recommendation = esc_html__( 'Ensure that all interactive elements are accessible via keyboard navigation.', 'site-vitals-wp' );
 
         return [
-            'result'        => $result,
+            'result'         => $result,
             'recommendation' => $recommendation,
         ];
     }
@@ -1465,6 +1474,7 @@ class Site_Vitals_For_WordPress {
     /**
      * ARIA Roles and Landmarks Check
      *
+     * @since  1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_aria_roles_check() {
@@ -1472,7 +1482,7 @@ class Site_Vitals_For_WordPress {
         $recommendation = esc_html__( 'Use appropriate ARIA roles and landmarks on major content areas for accessibility.', 'site-vitals-wp' );
 
         return [
-            'result'        => $result,
+            'result'         => $result,
             'recommendation' => $recommendation,
         ];
     }
@@ -1480,6 +1490,7 @@ class Site_Vitals_For_WordPress {
     /**
      * Form Labels Check
      *
+     * @since  1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_form_labels_check() {
@@ -1503,12 +1514,12 @@ class Site_Vitals_For_WordPress {
             ? esc_html__( 'All form fields have labels.', 'site-vitals-wp' )
             : sprintf(
                 /* translators: %d: number of form fields missing labels */
-                __( '<strong>%d form fields</strong> are missing labels. Add labels to improve accessibility.', 'site-vitals-wp' ),
+                esc_html__( '<strong>%d form fields</strong> are missing labels. Add labels to improve accessibility.', 'site-vitals-wp' ),
                 absint( $count )
             );
 
         return [
-            'result'        => $result,
+            'result'         => $result,
             'recommendation' => $recommendation,
         ];
     }
@@ -1516,6 +1527,7 @@ class Site_Vitals_For_WordPress {
     /**
      * Heading Structure Check
      *
+     * @since  1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_heading_structure_check() {
@@ -1524,7 +1536,7 @@ class Site_Vitals_For_WordPress {
         $recommendation = esc_html__( 'Ensure headings follow a logical structure (e.g., H1 > H2 > H3) for accessibility.', 'site-vitals-wp' );
 
         return [
-            'result'        => $result,
+            'result'         => $result,
             'recommendation' => $recommendation,
         ];
     }
@@ -1532,6 +1544,7 @@ class Site_Vitals_For_WordPress {
     /**
      * Link Descriptions Check
      *
+     * @since  1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_link_descriptions_check() {
@@ -1553,12 +1566,12 @@ class Site_Vitals_For_WordPress {
             ? esc_html__( 'All links are descriptive.', 'site-vitals-wp' )
             : sprintf(
                 /* translators: %d: number of ambiguous links */
-                __( '<strong>%d links</strong> have ambiguous text. Use descriptive link text for accessibility.', 'site-vitals-wp' ),
+                esc_html__( '<strong>%d links</strong> have ambiguous text. Use descriptive link text for accessibility.', 'site-vitals-wp' ),
                 absint( $ambiguous_links )
             );
 
         return [
-            'result'        => $result,
+            'result'         => $result,
             'recommendation' => $recommendation,
         ];
     }
@@ -1569,34 +1582,24 @@ class Site_Vitals_For_WordPress {
      * @param string $category The category identifier.
      * @param string $label    The label to display for the category.
      *
+     * @since  1.0.0
      * @return void
      */
     public function display_category_summary( $category, $label ) {
-        // Get checks for the category
-        $table  = new Site_Vitals_Table( $this, $category );
-        $checks = $table->get_category_checks();
-
-        // Display the box with title and status
-        echo '<div class="site-vital-summary-box">';
+        echo '<div class="site-vital-summary-box" data-category="' . esc_attr( $category ) . '">';
         echo '<h2>' . esc_html( $label ) . '</h2>';
-
-        foreach ( $checks as $check ) {
-            // Display title and status
-            $status_class = $this->get_status_class( $check['result'] );
-            echo '<div class="site-vital-check ' . esc_attr( $status_class ) . '">';
-            echo '<span class="check-title">' . esc_html( $check['check'] ) . '</span>';
-            echo '<span class="check-status">' . esc_html( $check['result'] ) . '</span>';
-            echo '</div>';
-        }
-
+        echo '<div class="site-vital-status-counts">';
+        echo '<div class="sv-loading">' . esc_html__( 'Loading', 'site-vitals-wp' ) . '...</div>';
+        echo '</div>';
         echo '</div>';
     }
-
+    
     /**
      * Gets the CSS class based on the status.
      *
      * @param string $status The status string.
      *
+     * @since  1.0.0
      * @return string The corresponding CSS class.
      */
     private function get_status_class( $status ) {
@@ -1617,7 +1620,92 @@ class Site_Vitals_For_WordPress {
                 return 'status-default';
         }
     }
-
 }
 
 new Site_Vitals_For_WordPress();
+
+/**
+ * Plugin activation
+ * 
+ * @since  1.0.0
+ * @return void
+ */
+function site_vitals_plugin_activate() {
+    // Instantiate the main class.
+    $sv         = new Site_Vitals_For_WordPress();
+    $categories = $sv->get_categories();
+
+    foreach ( $categories as $cat_slug => $cat_label ) {
+        // Prepare the table data for this category.
+        $table = new Site_Vitals_Table( $sv, $cat_slug );
+        $table->prepare_items();
+        $checks = $table->items;
+
+        // Cache the checks for 12 hours (43200 seconds).
+        set_transient( 'site_vitals_' . $cat_slug, $checks, 43200 );
+    }
+}
+register_activation_hook( __FILE__, 'site_vitals_plugin_activate' );
+
+/**
+ * Handles the AJAX request to retrieve cached or freshly computed site vitals data for a given category.
+ *
+ * This function:
+ * - Verifies permissions and a security nonce.
+ * - Retrieves category-specific checks from a transient if available or computes them on the fly.
+ * - Counts how many checks are "Good," "Needs Attention," or "Needs Improvement."
+ * - Returns the counts as a JSON response.
+ *
+ * Hooked to the 'wp_ajax_site_vitals_get_category_data' action.
+ *
+ * @since  1.0.0
+ * @return void This function outputs JSON data and terminates execution.
+ */
+function site_vitals_get_category_data() {
+    // Security check.
+    check_ajax_referer( 'site_vitals_nonce', 'nonce' );
+
+    if ( ! current_user_can( 'manage_options' ) ) {
+        wp_send_json_error( [ 'message' => 'No permission.' ] );
+    }
+
+    $category = isset( $_POST['category'] ) ? sanitize_text_field( $_POST['category'] ) : '';
+    if ( empty( $category ) ) {
+        wp_send_json_error( [ 'message' => 'No category provided.' ] );
+    }
+
+    // Attempt to get cached data.
+    $transient_key = 'site_vitals_' . $category;
+    $checks = get_transient( $transient_key );
+
+    if ( false === $checks ) {
+        // Not cached, run table checks.
+        $table = new Site_Vitals_Table( new Site_Vitals_For_WordPress(), $category );
+        $table->prepare_items();
+        $checks = $table->items;
+        // Cache for 12 hours.
+        set_transient( $transient_key, $checks, 43200 );
+    }
+
+    $good_count    = 0;
+    $warning_count = 0;
+    $danger_count  = 0;
+
+    foreach ( $checks as $check ) {
+        $status = isset( $check['result'] ) ? $check['result'] : '';
+        if ( stripos( $status, 'good' ) !== false ) {
+            $good_count++;
+        } elseif ( stripos( $status, 'needs attention' ) !== false ) {
+            $warning_count++;
+        } elseif ( stripos( $status, 'needs improvement' ) !== false ) {
+            $danger_count++;
+        }
+    }
+
+    wp_send_json_success( [
+        'good'    => $good_count,
+        'warning' => $warning_count,
+        'danger'  => $danger_count,
+    ] );
+}
+add_action( 'wp_ajax_site_vitals_get_category_data', 'site_vitals_get_category_data' );

@@ -122,3 +122,62 @@ ul.striped>:nth-child(odd) {
     align-items: center;
     gap: 6;
 }
+
+.site-vitals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.site-vital-summary-box {
+    border: 1px solid #ddd;
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.site-vital-summary-box h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.site-vital-status-counts {
+    margin-bottom: 10px;
+}
+
+.site-vital-status-counts span {
+    display: block;
+    text-align: center;
+    margin: 5px auto;
+    padding: 5px 10px;
+    border-radius: 3px;
+    max-width: 150px;
+}
+
+/* Good (Green) */
+.sv-good-count {
+    background: #46b450;
+    color: #fff;
+}
+
+/* Warning (Yellow) */
+.sv-warning-count {
+    background: #ffb900;
+    color: #000;
+}
+
+/* Danger (Red) */
+.sv-danger-count {
+    background: #dc3232;
+    color: #fff;
+}
+
+.sv-loading {
+    display: inline-block;
+    background: #f0f0f0;
+    padding: 5px 10px;
+    border-radius: 3px;
+    color: #555;
+}
