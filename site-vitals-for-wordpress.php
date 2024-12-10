@@ -81,8 +81,8 @@ class Site_Vitals_For_WordPress {
             'manage_options',
             'site-vitals',
             [ $this, 'settings_page' ],
-            'dashicons-chart-bar',
-            25
+            'dashicons-heart',
+            222
         );
 
         foreach ( $this->categories as $slug => $label ) {
