@@ -766,26 +766,32 @@ class Site_Vitals_For_WordPress {
     public function run_navigation_clarity_check() {
         global $wpdb;
 
-        $orphaned_pages = $wpdb->get_var(
-            $wpdb->prepare(
-                "
-                SELECT COUNT(*)
-                FROM {$wpdb->posts} AS p
-                LEFT JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
-                WHERE p.post_type = %s
-                    AND p.post_status = %s
-                    AND NOT EXISTS (
-                        SELECT * FROM {$wpdb->posts} AS p2
-                        WHERE p2.post_content LIKE CONCAT('%', p.post_name, '%')
-                            AND p2.ID <> p.ID
-                    )
-                ",
-                'page',
-                'publish'
-            )
-        );
+        // Try to retrieve the cached orphaned pages count.
+        $orphaned_pages = get_transient( 'site_vitals_orphaned_pages_count' );
 
-        $result         = ( $orphaned_pages > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
+        if ( false === $orphaned_pages ) {
+            // The transient is missing or expired, so run the query.
+            $orphaned_pages = $wpdb->get_var( $wpdb->prepare( "
+                SELECT COUNT(*) 
+                FROM {$wpdb->posts} AS p
+                WHERE p.post_type = %s
+                AND p.post_status = %s
+                AND NOT EXISTS (
+                    SELECT 1
+                    FROM {$wpdb->posts} AS p2
+                    WHERE p2.post_content LIKE CONCAT('%%', p.post_name, '%%')
+                        AND p2.ID <> p.ID
+                )
+            ", 'page', 'publish' ) );
+
+            // Cache the result for one hour.
+            set_transient( 'site_vitals_orphaned_pages_count', $orphaned_pages, HOUR_IN_SECONDS );
+        }
+
+        $result = ( $orphaned_pages > 0 )
+            ? esc_html__( 'Needs Attention', 'site-vitals-wp' )
+            : esc_html__( 'Good', 'site-vitals-wp' );
+
         $recommendation = ( $orphaned_pages > 0 )
             ? wp_kses_post(
                 sprintf(
@@ -948,14 +954,21 @@ class Site_Vitals_For_WordPress {
     public function run_content_freshness_check() {
         global $wpdb;
 
-        $stale_posts = $wpdb->get_var(
-            "
-            SELECT COUNT(*) FROM {$wpdb->posts}
-            WHERE post_type = 'post'
+        // Try to get the stale posts count from the transient.
+        $stale_posts = get_transient( 'site_vitals_stale_posts_count' );
+
+        if ( false === $stale_posts ) {
+            // Transient not set or expired; run the query.
+            $stale_posts = $wpdb->get_var(
+                "SELECT COUNT(*) FROM {$wpdb->posts}
+                WHERE post_type = 'post'
                 AND post_status = 'publish'
-                AND post_modified < (NOW() - INTERVAL 1 YEAR)
-            "
-        );
+                AND post_modified < (NOW() - INTERVAL 1 YEAR)"
+            );
+
+            // Cache the result for 1 hour (3600 seconds).
+            set_transient( 'site_vitals_stale_posts_count', $stale_posts, 3600 );
+        }
 
         $result         = ( $stale_posts > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
         $recommendation = ( $stale_posts > 0 )
@@ -975,37 +988,130 @@ class Site_Vitals_For_WordPress {
     }
  
     /**
+     * Updates a cached array of site vitals.
+     *
+     * This function runs heavy queries and stores the results in a transient.
+     *
+     * @return void
+     */
+    function update_site_vitals() {
+        global $wpdb;
+
+        $vitals = [];
+
+        // Count posts with short content.
+        $vitals['short_posts'] = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(*) FROM {$wpdb->posts}
+                WHERE post_type = 'post'
+                AND post_status = 'publish'
+                AND LENGTH(post_content) < %d",
+                300
+            )
+        );
+
+        // Total published posts.
+        $vitals['total_posts'] = $wpdb->get_var(
+            "SELECT COUNT(*) FROM {$wpdb->posts}
+            WHERE post_type = 'post' AND post_status = 'publish'"
+        );
+
+        // Posts with media.
+        $vitals['posts_with_media'] = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(DISTINCT post_id)
+                FROM {$wpdb->postmeta}
+                WHERE meta_key = %s",
+                '_thumbnail_id'
+            )
+        );
+
+        // Duplicate titles.
+        $vitals['duplicate_titles'] = $wpdb->get_var(
+            "SELECT COUNT(*)
+            FROM (
+                SELECT post_title
+                FROM {$wpdb->posts}
+                WHERE post_type = 'post' AND post_status = 'publish'
+                GROUP BY post_title
+                HAVING COUNT(post_title) > 1
+            ) AS duplicates"
+        );
+
+        // High revision count (more than 20 revisions per post).
+        $vitals['high_revision_posts'] = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(*)
+                FROM (
+                    SELECT post_parent
+                    FROM {$wpdb->posts}
+                    WHERE post_type = 'revision'
+                    GROUP BY post_parent
+                    HAVING COUNT(ID) > %d
+                ) AS excessive_revisions",
+                20
+            )
+        );
+
+        // Posts missing taxonomy terms (e.g. categories/tags).
+        $vitals['untagged_posts'] = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(*)
+                FROM {$wpdb->posts} p
+                LEFT JOIN {$wpdb->term_relationships} tr ON p.ID = tr.object_id
+                WHERE p.post_type = %s
+                AND p.post_status = %s
+                AND tr.term_taxonomy_id IS NULL",
+                'post',
+                'publish'
+            )
+        );
+
+        // Save the data for one hour.
+        set_transient( 'site_vitals_data', $vitals, HOUR_IN_SECONDS );
+    }
+
+    /**
      * Runs broken links check.
      *
-     * @since  1.0.0
+     * @since 1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_broken_links_check() {
-        global $wpdb;
+        // Try to get a cached value.
+        $broken_links = get_transient( 'site_vitals_broken_links_count' );
 
-        $post_links = $wpdb->get_results(
-            "
-            SELECT ID, post_content FROM {$wpdb->posts}
-            WHERE post_type = 'post' AND post_status = 'publish'
-            ",
-            OBJECT
-        );
+        if ( false === $broken_links ) {
+            global $wpdb;
+            $post_links = $wpdb->get_results(
+                "SELECT ID, post_content FROM {$wpdb->posts}
+                WHERE post_type = 'post' AND post_status = 'publish'",
+                OBJECT
+            );
 
-        $broken_links = 0;
-        foreach ( $post_links as $post ) {
-            preg_match_all( '/href=["\']?([^"\'>]+)["\']?/', $post->post_content, $matches );
-            foreach ( $matches[1] as $link ) {
-                // Validate URL.
-                if ( filter_var( $link, FILTER_VALIDATE_URL ) ) {
-                    $response = wp_remote_head( $link );
-                    if ( is_wp_error( $response ) || 404 === intval( wp_remote_retrieve_response_code( $response ) ) ) {
-                        $broken_links++;
+            $broken_links = 0;
+            foreach ( $post_links as $post ) {
+                preg_match_all( '/href=["\']?([^"\'>]+)["\']?/', $post->post_content, $matches );
+                if ( ! empty( $matches[1] ) ) {
+                    foreach ( $matches[1] as $link ) {
+                        if ( filter_var( $link, FILTER_VALIDATE_URL ) ) {
+                            $response = wp_remote_head( $link );
+                            if ( is_wp_error( $response ) || 404 === intval( wp_remote_retrieve_response_code( $response ) ) ) {
+                                $broken_links++;
+                            }
+                        }
                     }
                 }
             }
+
+            // Cache the result (for example, for one hour).
+            set_transient( 'site_vitals_broken_links_count', $broken_links, HOUR_IN_SECONDS );
         }
 
-        $result         = ( $broken_links > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
+        $result = ( $broken_links > 0 ) 
+            ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) 
+            : esc_html__( 'Good', 'site-vitals-wp' );
+
         $recommendation = ( $broken_links > 0 )
             ? wp_kses_post(
                 sprintf(
@@ -1025,23 +1131,17 @@ class Site_Vitals_For_WordPress {
     /**
      * Runs content length check.
      *
-     * @since  1.0.0
+     * @since 1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_content_length_check() {
-        global $wpdb;
-
-        $short_posts = $wpdb->get_var(
-            "
-            SELECT COUNT(*) FROM {$wpdb->posts}
-            WHERE post_type = 'post'
-                AND post_status = 'publish'
-                AND LENGTH( post_content ) < %d
-            ",
-            300
-        );
-
-        $result         = ( $short_posts > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
+        $vitals = get_transient( 'site_vitals_data' );
+        $short_posts = isset( $vitals['short_posts'] ) ? $vitals['short_posts'] : 0;
+        
+        $result = ( $short_posts > 0 ) 
+            ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) 
+            : esc_html__( 'Good', 'site-vitals-wp' );
+        
         $recommendation = ( $short_posts > 0 )
             ? wp_kses_post(
                 sprintf(
@@ -1051,7 +1151,7 @@ class Site_Vitals_For_WordPress {
                 )
             )
             : esc_html__( 'All posts meet the recommended content length.', 'site-vitals-wp' );
-
+        
         return [
             'result'         => $result,
             'recommendation' => $recommendation,
@@ -1061,32 +1161,21 @@ class Site_Vitals_For_WordPress {
     /**
      * Runs media usage check.
      *
-     * @since  1.0.0
+     * @since 1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_media_usage_check() {
-        global $wpdb;
-
-        $posts_with_media = $wpdb->get_var(
-            "
-            SELECT COUNT(DISTINCT post_id)
-            FROM {$wpdb->postmeta}
-            WHERE meta_key = %s
-            ",
-            '_thumbnail_id'
-        );
-
-        $total_posts = $wpdb->get_var(
-            "
-            SELECT COUNT(*)
-            FROM {$wpdb->posts}
-            WHERE post_type = 'post' AND post_status = 'publish'
-            "
-        );
-
+        $vitals = get_transient( 'site_vitals_data' );
+        $total_posts = isset( $vitals['total_posts'] ) ? $vitals['total_posts'] : 0;
+        $posts_with_media = isset( $vitals['posts_with_media'] ) ? $vitals['posts_with_media'] : 0;
+        
         $missing_media_count = $total_posts - $posts_with_media;
-        $result              = ( $missing_media_count > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
-        $recommendation      = ( $missing_media_count > 0 )
+        
+        $result = ( $missing_media_count > 0 ) 
+            ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) 
+            : esc_html__( 'Good', 'site-vitals-wp' );
+        
+        $recommendation = ( $missing_media_count > 0 )
             ? wp_kses_post(
                 sprintf(
                     /* translators: %s: number of posts missing featured images */
@@ -1095,7 +1184,7 @@ class Site_Vitals_For_WordPress {
                 )
             )
             : esc_html__( 'All posts include featured images or media.', 'site-vitals-wp' );
-
+        
         return [
             'result'         => $result,
             'recommendation' => $recommendation,
@@ -1105,26 +1194,17 @@ class Site_Vitals_For_WordPress {
     /**
      * Runs duplicate content check.
      *
-     * @since  1.0.0
+     * @since 1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_duplicate_content_check() {
-        global $wpdb;
-
-        $duplicate_titles = $wpdb->get_var(
-            "
-            SELECT COUNT(*)
-            FROM (
-                SELECT post_title
-                FROM {$wpdb->posts}
-                WHERE post_type = 'post' AND post_status = 'publish'
-                GROUP BY post_title
-                HAVING COUNT( post_title ) > 1
-            ) AS duplicates
-            "
-        );
-
-        $result         = ( $duplicate_titles > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
+        $vitals = get_transient( 'site_vitals_data' );
+        $duplicate_titles = isset( $vitals['duplicate_titles'] ) ? $vitals['duplicate_titles'] : 0;
+        
+        $result = ( $duplicate_titles > 0 ) 
+            ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) 
+            : esc_html__( 'Good', 'site-vitals-wp' );
+        
         $recommendation = ( $duplicate_titles > 0 )
             ? wp_kses_post(
                 sprintf(
@@ -1134,7 +1214,7 @@ class Site_Vitals_For_WordPress {
                 )
             )
             : esc_html__( 'No duplicate titles detected.', 'site-vitals-wp' );
-
+        
         return [
             'result'         => $result,
             'recommendation' => $recommendation,
@@ -1148,23 +1228,13 @@ class Site_Vitals_For_WordPress {
      * @return array An array containing the result and recommendation.
      */
     public function run_revision_count_check() {
-        global $wpdb;
+        $vitals              = get_transient( 'site_vitals_data' );
+        $high_revision_posts = isset( $vitals['high_revision_posts'] ) ? $vitals['high_revision_posts'] : 0;
 
-        $high_revision_posts = $wpdb->get_var(
-            "
-            SELECT COUNT(*)
-            FROM (
-                SELECT post_parent
-                FROM {$wpdb->posts}
-                WHERE post_type = 'revision'
-                GROUP BY post_parent
-                HAVING COUNT( ID ) > %d
-            ) AS excessive_revisions
-            ",
-            20
-        );
+        $result = ( $high_revision_posts > 0 ) 
+            ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) 
+            : esc_html__( 'Good', 'site-vitals-wp' );
 
-        $result         = ( $high_revision_posts > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
         $recommendation = ( $high_revision_posts > 0 )
             ? wp_kses_post(
                 sprintf(
@@ -1184,26 +1254,17 @@ class Site_Vitals_For_WordPress {
     /**
      * Runs taxonomy usage check.
      *
-     * @since  1.0.0
+     * @since 1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_taxonomy_usage_check() {
-        global $wpdb;
+        $vitals = get_transient( 'site_vitals_data' );
+        $untagged_posts = isset( $vitals['untagged_posts'] ) ? $vitals['untagged_posts'] : 0;
 
-        $untagged_posts = $wpdb->get_var(
-            "
-            SELECT COUNT(*)
-            FROM {$wpdb->posts} p
-            LEFT JOIN {$wpdb->term_relationships} tr ON ( p.ID = tr.object_id )
-            WHERE p.post_type = %s
-                AND p.post_status = %s
-                AND tr.term_taxonomy_id IS NULL
-            ",
-            'post',
-            'publish'
-        );
+        $result = ( $untagged_posts > 0 ) 
+            ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) 
+            : esc_html__( 'Good', 'site-vitals-wp' );
 
-        $result         = ( $untagged_posts > 0 ) ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
         $recommendation = ( $untagged_posts > 0 )
             ? wp_kses_post(
                 sprintf(
@@ -1751,3 +1812,23 @@ function site_vitals_get_category_data() {
     ] );
 }
 add_action( 'wp_ajax_site_vitals_get_category_data', 'site_vitals_get_category_data' );
+
+// Schedule the event on plugin activation.
+function site_vitals_schedule_update() {
+    if ( ! wp_next_scheduled( 'update_site_vitals_event' ) ) {
+        wp_schedule_event( time(), 'hourly', 'update_site_vitals_event' );
+    }
+}
+register_activation_hook( __FILE__, 'site_vitals_schedule_update' );
+
+// Unschedule on deactivation.
+function site_vitals_unschedule_update() {
+    $timestamp = wp_next_scheduled( 'update_site_vitals_event' );
+    if ( $timestamp ) {
+        wp_unschedule_event( $timestamp, 'update_site_vitals_event' );
+    }
+}
+register_deactivation_hook( __FILE__, 'site_vitals_unschedule_update' );
+
+// Hook the update function.
+add_action( 'update_site_vitals_event', 'update_site_vitals' );
