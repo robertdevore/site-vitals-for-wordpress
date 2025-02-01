@@ -528,29 +528,47 @@ class Site_Vitals_For_WordPress {
      * @return array An array containing the result and recommendation.
      */
     public function run_file_permissions_check() {
-        $file_paths     = [
-            ABSPATH . 'wp-config.php',
-            WP_CONTENT_DIR . '/uploads',
+        $file_paths = [
+            ABSPATH . 'wp-config.php',   // File, should be 644 (or even 600/640 in some setups)
+            ABSPATH . '.htaccess',       // File, should be 644
+            WP_CONTENT_DIR . '/uploads', // Directory, should be 755
+            ABSPATH . 'wp-admin',        // Directory, should be 755
+            ABSPATH . 'wp-includes',     // Directory, should be 755
         ];
+        $file_paths     = apply_filters( 'svwp_pemissions_check_file_paths', $file_paths );
         $insecure_files = [];
 
         foreach ( $file_paths as $file ) {
-            if ( file_exists( $file ) && substr( sprintf( '%o', fileperms( $file ) ), -3 ) !== '644' ) {
-                $insecure_files[] = sanitize_text_field( basename( $file ) );
+            if ( file_exists( $file ) ) {
+                $perms = substr( sprintf( '%o', fileperms( $file ) ), -3 );
+                if ( is_dir( $file ) ) {
+                    // Directories are generally 755.
+                    if ( $perms !== '755' ) {
+                        $insecure_files[] = sanitize_text_field( basename( $file ) );
+                    }
+                } else {
+                    // Files are generally 644 (or in some cases, more restrictive like 600).
+                    if ( $perms !== '644' ) {
+                        $insecure_files[] = sanitize_text_field( basename( $file ) );
+                    }
+                }
             }
         }
 
-        $result         = empty( $insecure_files ) ? esc_html__( 'Good', 'site-vitals-wp' ) : esc_html__( 'Needs Attention', 'site-vitals-wp' );
+        $result = empty( $insecure_files ) 
+            ? esc_html__( 'Good', 'site-vitals-wp' ) 
+            : esc_html__( 'Needs Attention', 'site-vitals-wp' );
+
         $recommendation = empty( $insecure_files )
             ? esc_html__( 'File permissions are secure.', 'site-vitals-wp' )
             : sprintf(
                 /* translators: %s: list of insecure files */
-                __( 'Insecure file permissions detected for: %s. Set permissions to 644 for enhanced security.', 'site-vitals-wp' ),
+                __( 'Insecure file permissions detected for: %s. Set permissions to the recommended values (644 for files, 755 for directories) for enhanced security.', 'site-vitals-wp' ),
                 esc_html( implode( ', ', $insecure_files ) )
             );
 
         return [
-            'result'        => $result,
+            'result'         => $result,
             'recommendation' => $recommendation,
         ];
     }
