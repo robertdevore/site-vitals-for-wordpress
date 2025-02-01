@@ -639,6 +639,7 @@ class Site_Vitals_For_WordPress {
             'seo-image-optimizer/seo-image-optimizer.php',
             'seo-friendly-images/seo-friendly-images.php',
             'local-seo/local-seo.php',
+            'seo-for-wordpress/seo-for-wordpress.php'
         ];
 
         $active_seo_plugins = array_filter( $seo_plugins, 'is_plugin_active' );
