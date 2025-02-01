@@ -120,7 +120,7 @@ class Site_Vitals_For_WordPress {
     public function settings_page( $category = null ) {
         if ( is_null( $category ) || '' === $category ) {
             echo '<div class="wrap">
-            <h1>' . esc_html( 'Site Vitals', 'site-vitals-wp' ) . '
+            <h1><strong>' . esc_html__( 'Site Vitals', 'site-vitals-wp' ) . '</strong>
                 <a id="site-vitals-support-btn" href="https://robertdevore.com/contact/" target="_blank" class="button button-alt" style="margin-left: 10px;">
                     <span class="dashicons dashicons-format-chat" style="vertical-align: middle;"></span> ' . esc_html__( 'Support', 'site-vitals-wp' ) . '
                 </a>
@@ -140,7 +140,7 @@ class Site_Vitals_For_WordPress {
         } else {
             $category_label = $this->categories[ $category ] ?? esc_html__( 'Site Vitals', 'site-vitals-wp' );
             echo '<div class="wrap">
-                        <h1>' . esc_html( $category_label ) . '
+                        <h1><strong>' . esc_html__( 'Site Vitals', 'site-vitals-wp' ) . '</strong>: <span class="title-cat">' . esc_html( $category_label ) . '</span>
                 <a id="site-vitals-support-btn" href="https://robertdevore.com/contact/" target="_blank" class="button button-alt" style="margin-left: 10px;">
                     <span class="dashicons dashicons-format-chat" style="vertical-align: middle;"></span> ' . esc_html__( 'Support', 'site-vitals-wp' ) . '
                 </a>
@@ -1675,14 +1675,24 @@ class Site_Vitals_For_WordPress {
      * @return void
      */
     public function display_category_summary( $category, $label ) {
-        echo '<div class="site-vital-summary-box" data-category="' . esc_attr( $category ) . '">';
-        echo '<h2>' . esc_html( $label ) . '</h2>';
-        echo '<div class="site-vital-status-counts">';
-        echo '<div class="sv-loading">' . esc_html__( 'Loading', 'site-vitals-wp' ) . '...</div>';
-        echo '</div>';
-        echo '</div>';
+        // Build the URL for the settings page.
+        $settings_url = admin_url( 'admin.php?page=site-vitals-' . $category );
+        
+        // Build the output string.
+        $output  = '<a href="' . esc_url( $settings_url ) . '" style="text-decoration: none; color: inherit;">';
+        $output .= '<div class="site-vital-summary-box" data-category="' . esc_attr( $category ) . '">';
+        $output .= '<h2>' . esc_html( $label ) . '</h2>';
+        $output .= '<div class="site-vital-status-counts">';
+        $output .= '<div class="sv-loading">' . esc_html__( 'Loading', 'site-vitals-wp' ) . '...</div>';
+        $output .= '</div>';
+        $output .= '</div>';
+        $output .= '</a>';
+        
+        // Echo the entire output once.
+        echo $output;
     }
-    
+
+
     /**
      * Gets the CSS class based on the status.
      *

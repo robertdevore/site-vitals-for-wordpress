@@ -5,6 +5,11 @@
     font-size: 24px;
 }
 
+.wrap h1 span.title-cat {
+    font-weight: 300;
+    color: #666;
+}
+
 .wp-list-table .column-check {
     font-weight: bold;
 }
