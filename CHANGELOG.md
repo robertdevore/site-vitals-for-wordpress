@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.1.1
+
+* [🐛 BUG: Fixed GLOB_BRACE usage causing fatal errors on some systems](https://github.com/robertdevore/site-vitals-for-wordpress/commit/943260999d9eda886e2b07790d341b5477ce4c3f)
+* [👌 IMPROVE: Updated plugins page to include a link to the settings page](https://github.com/robertdevore/site-vitals-for-wordpress/commit/21e11396025b558d4ed7f406d9ca37e07ceba14c)
+* [👌 IMPROVE: Updated text strings for localization](https://github.com/robertdevore/site-vitals-for-wordpress/commit/508b2a3df7d0e1600105621e4d0eb6dfff3583a1)
+
 ## 1.1.0
 
 * [🐛 BUG: Fixed file permissions check flagging files incorrectly](https://github.com/robertdevore/site-vitals-for-wordpress/commit/6730631320459c6504eeab8bf0e8c381338daa5e)
