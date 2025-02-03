@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Site Vitals for WordPress®\n"
 "POT-Creation-Date: 2025-02-01 01:30-0500\n"
-"PO-Revision-Date: 2025-02-01 01:34-0500\n"
+"PO-Revision-Date: 2025-02-02 22:00-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -138,7 +138,7 @@ msgstr "Toutes les images sont optimisées."
 
 #: site-vitals-for-wordpress.php:263
 msgid "Consider compressing these images: "
-msgstr "Pensez à compresser ces images :"
+msgstr "Pensez à compresser ces images : "
 
 #: site-vitals-for-wordpress.php:283
 msgid "Fair"
@@ -176,7 +176,7 @@ msgstr "Aucun script tiers lent n'a été détecté."
 
 #: site-vitals-for-wordpress.php:323
 msgid "Consider optimizing or deferring these scripts: "
-msgstr "Envisagez d'optimiser ou de différer ces scripts :"
+msgstr "Envisagez d'optimiser ou de différer ces scripts : "
 
 #: site-vitals-for-wordpress.php:345
 #, php-format
@@ -205,7 +205,7 @@ msgstr ""
 
 #: site-vitals-for-wordpress.php:392
 msgid "All plugins are up to date."
-msgstr "Vérifier si les plugins sont à jour"
+msgstr "Vérifier si les plugins sont à jour."
 
 #. translators: %1$d: number of outdated plugins, %2$s: list of outdated plugin names
 #: site-vitals-for-wordpress.php:396
@@ -219,7 +219,7 @@ msgstr ""
 
 #: site-vitals-for-wordpress.php:428
 msgid "All themes are up to date."
-msgstr "Vérifier si les thèmes sont à jour"
+msgstr "Vérifier si les thèmes sont à jour."
 
 #. translators: %1$d: number of outdated themes, %2$s: list of outdated theme names
 #: site-vitals-for-wordpress.php:432
