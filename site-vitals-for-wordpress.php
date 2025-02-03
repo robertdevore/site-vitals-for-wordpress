@@ -249,7 +249,14 @@ class Site_Vitals_For_WordPress {
     public function run_image_optimization_check() {
         $uploads_dir  = wp_upload_dir()['basedir'];
         $large_images = [];
-        $image_files  = glob( $uploads_dir . '/*.{jpg,jpeg,png,gif}', GLOB_BRACE );
+        $image_files  = array_merge(
+            glob( $uploads_dir . '/*.jpg' ),
+            glob( $uploads_dir . '/*.jpeg' ),
+            glob( $uploads_dir . '/*.png' ),
+            glob( $uploads_dir . '/*.gif' ),
+            glob( $uploads_dir . '/*.webp' ),
+            glob( $uploads_dir . '/*.heic' ),
+        );
 
         foreach ( $image_files as $file ) {
             if ( filesize( $file ) > 500 * 1024 ) {
@@ -257,7 +264,10 @@ class Site_Vitals_For_WordPress {
             }
         }
 
-        $result         = empty( $large_images ) ? esc_html__( 'Good', 'site-vitals-wp' ) : esc_html__( 'Needs Optimization', 'site-vitals-wp' );
+        $result = empty( $large_images ) 
+            ? esc_html__( 'Good', 'site-vitals-wp' ) 
+            : esc_html__( 'Needs Optimization', 'site-vitals-wp' );
+
         $recommendation = empty( $large_images )
             ? esc_html__( 'All images are optimized.', 'site-vitals-wp' )
             : esc_html__( 'Consider compressing these images: ', 'site-vitals-wp' ) . implode( ', ', $large_images );
