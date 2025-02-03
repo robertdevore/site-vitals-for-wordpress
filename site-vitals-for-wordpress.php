@@ -49,6 +49,24 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 use RobertDevore\WPComCheck\WPComPluginHandler;
 new WPComPluginHandler( plugin_basename( __FILE__ ), 'https://robertdevore.com/why-this-plugin-doesnt-support-wordpress-com-hosting/' );
 
+// Plugin basename.
+$plugin_name = plugin_basename( __FILE__ );
+
+/**
+ * Add settings link on plugin page
+ *
+ * @param array $links an array of links related to the plugin.
+ * 
+ * @since  1.1.1
+ * @return array updatead array of links related to the plugin.
+ */
+function svwp_settings_link( $links ) {
+    $settings_link = '<a href="admin.php?page=site-vitals">' . esc_html__( 'Settings', 'site-vitals-wp' ) . '</a>';
+    array_unshift( $links, $settings_link );
+    return $links;
+}
+add_filter( "plugin_action_links_$plugin_name", 'svwp_settings_link' );
+
 class Site_Vitals_For_WordPress {
 
     private $categories;
