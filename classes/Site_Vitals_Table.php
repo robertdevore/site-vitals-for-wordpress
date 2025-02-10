@@ -17,7 +17,7 @@ class Site_Vitals_Table extends WP_List_Table {
      */
     public function __construct( $plugin_instance, $category ) {
         $this->plugin_instance = $plugin_instance;
-    
+
         // Validate category.
         if ( ! array_key_exists( $category, $this->plugin_instance->get_categories() ) ) {
             $category = 'performance';
@@ -43,7 +43,6 @@ class Site_Vitals_Table extends WP_List_Table {
             'check' => 'Check'
         ];
     }
-    
 
     /**
      * Prepares the table items for display.
@@ -78,40 +77,40 @@ class Site_Vitals_Table extends WP_List_Table {
     private function get_category_checks() {
         $checks = [];
 
-        switch ($this->category) {
+        switch ( $this->category ) {
             case 'performance':
                 $checks[] = [
-                    'check'          => 'Page Load Speed',
+                    'check'          => __( 'Page Load Speed', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_page_load_speed_check()['result'],
                     'recommendation' => $this->plugin_instance->run_page_load_speed_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Image Optimization',
+                    'check'          => __( 'Image Optimization', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_image_optimization_check()['result'],
                     'recommendation' => $this->plugin_instance->run_image_optimization_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Code Optimization',
+                    'check'          => __( 'Code Optimization', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_code_optimization_check()['result'],
                     'recommendation' => $this->plugin_instance->run_code_optimization_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Third-Party Scripts',
+                    'check'          => __( 'Third-Party Scripts', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_third_party_scripts_check()['result'],
                     'recommendation' => $this->plugin_instance->run_third_party_scripts_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Database Optimization',
+                    'check'          => __( 'Database Optimization', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_database_optimization_check()['result'],
                     'recommendation' => $this->plugin_instance->run_database_optimization_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Caching Status',
+                    'check'          => __( 'Caching Status', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_caching_status_check()['result'],
                     'recommendation' => $this->plugin_instance->run_caching_status_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Server Response Time',
+                    'check'          => __( 'Server Response Time', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_server_response_time_check()['result'],
                     'recommendation' => $this->plugin_instance->run_server_response_time_check()['recommendation']
                 ];
@@ -119,37 +118,37 @@ class Site_Vitals_Table extends WP_List_Table {
 
             case 'security':
                 $checks[] = [
-                    'check'          => 'SSL Certificate',
+                    'check'          => __( 'SSL Certificate', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_ssl_certificate_check()['result'],
                     'recommendation' => $this->plugin_instance->run_ssl_certificate_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Plugin Update Status',
+                    'check'          => __( 'Plugin Update Status', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_plugin_update_check()['result'],
                     'recommendation' => $this->plugin_instance->run_plugin_update_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Theme Update Status',
+                    'check'          => __( 'Theme Update Status', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_theme_update_check()['result'],
                     'recommendation' => $this->plugin_instance->run_theme_update_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'WordPress Core Update Status',
+                    'check'          => __( 'WordPress Core Update Status', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_core_update_check()['result'],
                     'recommendation' => $this->plugin_instance->run_core_update_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Login Security (2FA)',
+                    'check'          => __( 'Login Security (2FA)', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_login_security_check()['result'],
                     'recommendation' => $this->plugin_instance->run_login_security_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Security Headers',
+                    'check'          => __( 'Security Headers', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_security_headers_check()['result'],
                     'recommendation' => $this->plugin_instance->run_security_headers_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'File Permissions',
+                    'check'          => __( 'File Permissions', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_file_permissions_check()['result'],
                     'recommendation' => $this->plugin_instance->run_file_permissions_check()['recommendation']
                 ];
@@ -157,22 +156,22 @@ class Site_Vitals_Table extends WP_List_Table {
 
             case 'seo':
                 $checks[] = [
-                    'check'          => 'SEO Meta Tags',
+                    'check'          => __( 'SEO Meta Tags', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_seo_meta_tags_check()['result'],
                     'recommendation' => $this->plugin_instance->run_seo_meta_tags_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'SEO Plugin Detection',
+                    'check'          => __( 'SEO Plugin Detection', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_seo_plugin_detection()['result'],
                     'recommendation' => $this->plugin_instance->run_seo_plugin_detection()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Image Alt Text',
+                    'check'          => __( 'Image Alt Text', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_image_alt_text_check()['result'],
                     'recommendation' => $this->plugin_instance->run_image_alt_text_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Sitemap Presence',
+                    'check'          => __( 'Sitemap Presence', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_sitemap_check()['result'],
                     'recommendation' => $this->plugin_instance->run_sitemap_check()['recommendation']
                 ];
@@ -180,27 +179,27 @@ class Site_Vitals_Table extends WP_List_Table {
                 
             case 'ux':
                 $checks[] = [
-                    'check'          => 'Mobile Responsiveness',
+                    'check'          => __( 'Mobile Responsiveness', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_mobile_responsiveness_check()['result'],
                     'recommendation' => $this->plugin_instance->run_mobile_responsiveness_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Navigation Clarity',
+                    'check'          => __( 'Navigation Clarity', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_navigation_clarity_check()['result'],
                     'recommendation' => $this->plugin_instance->run_navigation_clarity_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => '404 Error Pages',
+                    'check'          => __( '404 Error Pages', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_404_error_check()['result'],
                     'recommendation' => $this->plugin_instance->run_404_error_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Page Load Time on Key Pages',
+                    'check'          => __( 'Page Load Time on Key Pages', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_page_load_time_check()['result'],
                     'recommendation' => $this->plugin_instance->run_page_load_time_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Font Readability',
+                    'check'          => __( 'Font Readability', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_font_readability_check()['result'],
                     'recommendation' => $this->plugin_instance->run_font_readability_check()['recommendation']
                 ];
@@ -208,37 +207,37 @@ class Site_Vitals_Table extends WP_List_Table {
                 
             case 'content':
                 $checks[] = [
-                    'check'          => 'Content Freshness',
+                    'check'          => __( 'Content Freshness', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_content_freshness_check()['result'],
                     'recommendation' => $this->plugin_instance->run_content_freshness_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Broken Links',
+                    'check'          => __( 'Broken Links', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_broken_links_check()['result'],
                     'recommendation' => $this->plugin_instance->run_broken_links_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Content Length',
+                    'check'          => __( 'Content Length', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_content_length_check()['result'],
                     'recommendation' => $this->plugin_instance->run_content_length_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Media Usage',
+                    'check'          => __( 'Media Usage', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_media_usage_check()['result'],
                     'recommendation' => $this->plugin_instance->run_media_usage_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Duplicate Content',
+                    'check'          => __( 'Duplicate Content', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_duplicate_content_check()['result'],
                     'recommendation' => $this->plugin_instance->run_duplicate_content_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Revision Count',
+                    'check'          => __( 'Revision Count', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_revision_count_check()['result'],
                     'recommendation' => $this->plugin_instance->run_revision_count_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Taxonomy Usage',
+                    'check'          => __( 'Taxonomy Usage', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_taxonomy_usage_check()['result'],
                     'recommendation' => $this->plugin_instance->run_taxonomy_usage_check()['recommendation']
                 ];
@@ -246,37 +245,37 @@ class Site_Vitals_Table extends WP_List_Table {
 
             case 'technical':
                 $checks[] = [
-                    'check'          => 'Caching Status',
+                    'check'          => __( 'Caching Status', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_caching_status_check()['result'],
                     'recommendation' => $this->plugin_instance->run_caching_status_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'PHP Version',
+                    'check'          => __( 'PHP Version', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_php_version_check()['result'],
                     'recommendation' => $this->plugin_instance->run_php_version_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Database Optimization',
+                    'check'          => __( 'Database Optimization', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_database_optimization_check()['result'],
                     'recommendation' => $this->plugin_instance->run_database_optimization_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Max Upload Size',
+                    'check'          => __( 'Max Upload Size', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_max_upload_size_check()['result'],
                     'recommendation' => $this->plugin_instance->run_max_upload_size_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Memory Limit',
+                    'check'          => __( 'Memory Limit', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_memory_limit_check()['result'],
                     'recommendation' => $this->plugin_instance->run_memory_limit_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Server Response Time',
+                    'check'          => __( 'Server Response Time', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_server_response_time_check()['result'],
                     'recommendation' => $this->plugin_instance->run_server_response_time_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Gzip Compression',
+                    'check'          => __( 'Gzip Compression', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_gzip_compression_check()['result'],
                     'recommendation' => $this->plugin_instance->run_gzip_compression_check()['recommendation']
                 ];
@@ -284,42 +283,42 @@ class Site_Vitals_Table extends WP_List_Table {
 
             case 'compliance':
                 $checks[] = [
-                    'check'          => 'Alt Text for Images',
+                    'check'          => __( 'Alt Text for Images', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_alt_text_check()['result'],
                     'recommendation' => $this->plugin_instance->run_alt_text_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Color Contrast',
+                    'check'          => __( 'Color Contrast', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_color_contrast_check()['result'],
                     'recommendation' => $this->plugin_instance->run_color_contrast_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Keyboard Navigation',
+                    'check'          => __( 'Keyboard Navigation', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_keyboard_navigation_check()['result'],
                     'recommendation' => $this->plugin_instance->run_keyboard_navigation_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'ARIA Roles and Landmarks',
+                    'check'          => __( 'ARIA Roles and Landmarks', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_aria_roles_check()['result'],
                     'recommendation' => $this->plugin_instance->run_aria_roles_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Form Labels',
+                    'check'          => __( 'Form Labels', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_form_labels_check()['result'],
                     'recommendation' => $this->plugin_instance->run_form_labels_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Heading Structure',
+                    'check'          => __( 'Heading Structure', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_heading_structure_check()['result'],
                     'recommendation' => $this->plugin_instance->run_heading_structure_check()['recommendation']
                 ];
                 $checks[] = [
-                    'check'          => 'Link Descriptions',
+                    'check'          => __( 'Link Descriptions', 'site-vitals-wp' ),
                     'result'         => $this->plugin_instance->run_link_descriptions_check()['result'],
                     'recommendation' => $this->plugin_instance->run_link_descriptions_check()['recommendation']
                 ];
                 break;
-                
+
             default:
                 break;
         }
@@ -345,9 +344,9 @@ class Site_Vitals_Table extends WP_List_Table {
         $status_lower = strtolower( $item['result'] );
         $status_class = 'site-vital-status-good';
 
-        if ( strpos( $status_lower, 'no caching detected' ) !== false) {
+        if ( strpos( $status_lower, 'no caching detected' ) !== false ) {
             $status_class = 'site-vital-status-needs-attention';
-        } elseif ( strpos( $status_lower, 'needs attention' ) !== false) {
+        } elseif ( strpos( $status_lower, 'needs attention' ) !== false ) {
             $status_class = 'site-vital-status-needs-attention';
         } elseif ( strpos( $status_lower, 'needs improvement' ) !== false || strpos( $status_lower, 'needs optimization' ) !== false ) {
             $status_class = 'site-vital-status-needs-improvement';
