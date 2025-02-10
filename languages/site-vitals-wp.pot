@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Site Vitals for WordPress®\n"
-"POT-Creation-Date: 2025-02-02 22:07-0500\n"
-"PO-Revision-Date: 2025-02-01 01:26-0500\n"
+"POT-Creation-Date: 2025-02-09 23:25-0500\n"
+"PO-Revision-Date: 2025-02-09 23:25-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,236 +22,406 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.min.js\n"
 "X-Poedit-SearchPathExcluded-1: vendor\n"
 
-#: classes/Site_Vitals_Table.php:359
+#: classes/Site_Vitals_Table.php:83
+msgid "Page Load Speed"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:88
+msgid "Image Optimization"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:93
+msgid "Code Optimization"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:98
+msgid "Third-Party Scripts"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:103 classes/Site_Vitals_Table.php:258
+msgid "Database Optimization"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:108 classes/Site_Vitals_Table.php:248
+msgid "Caching Status"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:113 classes/Site_Vitals_Table.php:273
+msgid "Server Response Time"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:121
+msgid "SSL Certificate"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:126
+msgid "Plugin Update Status"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:131
+msgid "Theme Update Status"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:136
+msgid "WordPress Core Update Status"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:141
+msgid "Login Security (2FA)"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:146
+msgid "Security Headers"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:151
+msgid "File Permissions"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:159
+msgid "SEO Meta Tags"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:164
+msgid "SEO Plugin Detection"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:169
+msgid "Image Alt Text"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:174
+msgid "Sitemap Presence"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:182
+msgid "Mobile Responsiveness"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:187
+msgid "Navigation Clarity"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:192
+msgid "404 Error Pages"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:197
+msgid "Page Load Time on Key Pages"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:202
+msgid "Font Readability"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:210
+msgid "Content Freshness"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:215
+msgid "Broken Links"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:220
+msgid "Content Length"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:225
+msgid "Media Usage"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:230
+msgid "Duplicate Content"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:235
+msgid "Revision Count"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:240
+msgid "Taxonomy Usage"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:253
+msgid "PHP Version"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:263
+msgid "Max Upload Size"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:268
+msgid "Memory Limit"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:278
+msgid "Gzip Compression"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:286
+msgid "Alt Text for Images"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:291
+msgid "Color Contrast"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:296
+msgid "Keyboard Navigation"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:301
+msgid "ARIA Roles and Landmarks"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:306
+msgid "Form Labels"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:311
+msgid "Heading Structure"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:316
+msgid "Link Descriptions"
+msgstr ""
+
+#: classes/Site_Vitals_Table.php:358
 msgid "Result"
 msgstr ""
 
-#: classes/Site_Vitals_Table.php:360
+#: classes/Site_Vitals_Table.php:359
 msgid "Recommendation"
 msgstr ""
 
-#: classes/Site_Vitals_Table.php:375
+#: classes/Site_Vitals_Table.php:374
 msgid "No site vitals data available for this category."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:61
+#: site-vitals-for-wordpress.php:68
+msgid "Settings"
+msgstr ""
+
+#: site-vitals-for-wordpress.php:83
 msgid "Performance"
 msgstr ""
 
-#: site-vitals-for-wordpress.php:62
+#: site-vitals-for-wordpress.php:84
 msgid "Security"
 msgstr ""
 
-#: site-vitals-for-wordpress.php:63
+#: site-vitals-for-wordpress.php:85
 msgid "SEO"
 msgstr ""
 
-#: site-vitals-for-wordpress.php:64
+#: site-vitals-for-wordpress.php:86
 msgid "User Experience (UX)"
 msgstr ""
 
-#: site-vitals-for-wordpress.php:65
+#: site-vitals-for-wordpress.php:87
 msgid "Content Management"
 msgstr ""
 
-#: site-vitals-for-wordpress.php:66
+#: site-vitals-for-wordpress.php:88
 msgid "Technical Config"
 msgstr ""
 
-#: site-vitals-for-wordpress.php:96 site-vitals-for-wordpress.php:97
-#: site-vitals-for-wordpress.php:130 site-vitals-for-wordpress.php:148
-#: site-vitals-for-wordpress.php:150
+#: site-vitals-for-wordpress.php:118 site-vitals-for-wordpress.php:119
+#: site-vitals-for-wordpress.php:152 site-vitals-for-wordpress.php:170
+#: site-vitals-for-wordpress.php:172
 msgid "Site Vitals"
 msgstr ""
 
-#: site-vitals-for-wordpress.php:132 site-vitals-for-wordpress.php:152
+#: site-vitals-for-wordpress.php:154 site-vitals-for-wordpress.php:174
 msgid "Support"
 msgstr ""
 
-#: site-vitals-for-wordpress.php:135 site-vitals-for-wordpress.php:155
+#: site-vitals-for-wordpress.php:157 site-vitals-for-wordpress.php:177
 msgid "Documentation"
 msgstr ""
 
-#: site-vitals-for-wordpress.php:162
+#: site-vitals-for-wordpress.php:184
 msgid "Invalid category."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:224 site-vitals-for-wordpress.php:595
+#: site-vitals-for-wordpress.php:246 site-vitals-for-wordpress.php:629
 msgid "Error"
 msgstr ""
 
-#: site-vitals-for-wordpress.php:225
+#: site-vitals-for-wordpress.php:247
 msgid ""
 "Unable to retrieve homepage load time. Please check network and server "
 "status."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:232 site-vitals-for-wordpress.php:343
-#: site-vitals-for-wordpress.php:756 site-vitals-for-wordpress.php:843
-#: site-vitals-for-wordpress.php:913
+#: site-vitals-for-wordpress.php:254 site-vitals-for-wordpress.php:377
+#: site-vitals-for-wordpress.php:790 site-vitals-for-wordpress.php:877
+#: site-vitals-for-wordpress.php:947 site-vitals-for-wordpress.php:1751
 msgid "Needs Improvement"
 msgstr ""
 
-#: site-vitals-for-wordpress.php:232 site-vitals-for-wordpress.php:260
-#: site-vitals-for-wordpress.php:283 site-vitals-for-wordpress.php:320
-#: site-vitals-for-wordpress.php:343 site-vitals-for-wordpress.php:362
-#: site-vitals-for-wordpress.php:390 site-vitals-for-wordpress.php:426
-#: site-vitals-for-wordpress.php:464 site-vitals-for-wordpress.php:483
-#: site-vitals-for-wordpress.php:515 site-vitals-for-wordpress.php:566
-#: site-vitals-for-wordpress.php:604 site-vitals-for-wordpress.php:691
-#: site-vitals-for-wordpress.php:736 site-vitals-for-wordpress.php:756
-#: site-vitals-for-wordpress.php:800 site-vitals-for-wordpress.php:843
-#: site-vitals-for-wordpress.php:883 site-vitals-for-wordpress.php:913
-#: site-vitals-for-wordpress.php:944 site-vitals-for-wordpress.php:980
-#: site-vitals-for-wordpress.php:1120 site-vitals-for-wordpress.php:1150
-#: site-vitals-for-wordpress.php:1183 site-vitals-for-wordpress.php:1213
-#: site-vitals-for-wordpress.php:1243 site-vitals-for-wordpress.php:1273
-#: site-vitals-for-wordpress.php:1376 site-vitals-for-wordpress.php:1417
-#: site-vitals-for-wordpress.php:1442 site-vitals-for-wordpress.php:1467
-#: site-vitals-for-wordpress.php:1491 site-vitals-for-wordpress.php:1522
-#: site-vitals-for-wordpress.php:1608 site-vitals-for-wordpress.php:1660
+#: site-vitals-for-wordpress.php:254 site-vitals-for-wordpress.php:290
+#: site-vitals-for-wordpress.php:315 site-vitals-for-wordpress.php:352
+#: site-vitals-for-wordpress.php:377 site-vitals-for-wordpress.php:396
+#: site-vitals-for-wordpress.php:424 site-vitals-for-wordpress.php:460
+#: site-vitals-for-wordpress.php:498 site-vitals-for-wordpress.php:517
+#: site-vitals-for-wordpress.php:549 site-vitals-for-wordpress.php:600
+#: site-vitals-for-wordpress.php:638 site-vitals-for-wordpress.php:725
+#: site-vitals-for-wordpress.php:770 site-vitals-for-wordpress.php:790
+#: site-vitals-for-wordpress.php:834 site-vitals-for-wordpress.php:877
+#: site-vitals-for-wordpress.php:917 site-vitals-for-wordpress.php:947
+#: site-vitals-for-wordpress.php:978 site-vitals-for-wordpress.php:1014
+#: site-vitals-for-wordpress.php:1154 site-vitals-for-wordpress.php:1184
+#: site-vitals-for-wordpress.php:1217 site-vitals-for-wordpress.php:1247
+#: site-vitals-for-wordpress.php:1277 site-vitals-for-wordpress.php:1307
+#: site-vitals-for-wordpress.php:1410 site-vitals-for-wordpress.php:1451
+#: site-vitals-for-wordpress.php:1476 site-vitals-for-wordpress.php:1501
+#: site-vitals-for-wordpress.php:1525 site-vitals-for-wordpress.php:1556
+#: site-vitals-for-wordpress.php:1642 site-vitals-for-wordpress.php:1694
+#: site-vitals-for-wordpress.php:1747
 msgid "Good"
 msgstr ""
 
-#: site-vitals-for-wordpress.php:234
+#: site-vitals-for-wordpress.php:256
 #, php-format
 msgid ""
 "Average homepage load time is %s seconds. Consider optimizing images, "
 "minifying assets, and enabling caching."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:235
+#: site-vitals-for-wordpress.php:257
 msgid "Average homepage load time is optimal."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:260 site-vitals-for-wordpress.php:1417
+#: site-vitals-for-wordpress.php:291 site-vitals-for-wordpress.php:1451
+#: site-vitals-for-wordpress.php:1757
 msgid "Needs Optimization"
 msgstr ""
 
-#: site-vitals-for-wordpress.php:262
+#: site-vitals-for-wordpress.php:294
 msgid "All images are optimized."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:263
+#: site-vitals-for-wordpress.php:295
 msgid "Consider compressing these images: "
 msgstr ""
 
-#: site-vitals-for-wordpress.php:283
+#: site-vitals-for-wordpress.php:315
 msgid "Fair"
 msgstr ""
 
-#: site-vitals-for-wordpress.php:285
+#: site-vitals-for-wordpress.php:317
 msgid "Consider removing or consolidating unused CSS/JS files."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:286
+#: site-vitals-for-wordpress.php:318
 msgid "Code optimization is at an acceptable level."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:320 site-vitals-for-wordpress.php:362
-#: site-vitals-for-wordpress.php:390 site-vitals-for-wordpress.php:426
-#: site-vitals-for-wordpress.php:464 site-vitals-for-wordpress.php:483
-#: site-vitals-for-wordpress.php:515 site-vitals-for-wordpress.php:567
-#: site-vitals-for-wordpress.php:604 site-vitals-for-wordpress.php:691
-#: site-vitals-for-wordpress.php:799 site-vitals-for-wordpress.php:883
-#: site-vitals-for-wordpress.php:944 site-vitals-for-wordpress.php:980
-#: site-vitals-for-wordpress.php:1119 site-vitals-for-wordpress.php:1149
-#: site-vitals-for-wordpress.php:1182 site-vitals-for-wordpress.php:1212
-#: site-vitals-for-wordpress.php:1242 site-vitals-for-wordpress.php:1272
-#: site-vitals-for-wordpress.php:1376 site-vitals-for-wordpress.php:1442
-#: site-vitals-for-wordpress.php:1467 site-vitals-for-wordpress.php:1491
-#: site-vitals-for-wordpress.php:1522 site-vitals-for-wordpress.php:1608
-#: site-vitals-for-wordpress.php:1660
+#: site-vitals-for-wordpress.php:352 site-vitals-for-wordpress.php:396
+#: site-vitals-for-wordpress.php:424 site-vitals-for-wordpress.php:460
+#: site-vitals-for-wordpress.php:498 site-vitals-for-wordpress.php:517
+#: site-vitals-for-wordpress.php:549 site-vitals-for-wordpress.php:601
+#: site-vitals-for-wordpress.php:638 site-vitals-for-wordpress.php:725
+#: site-vitals-for-wordpress.php:833 site-vitals-for-wordpress.php:917
+#: site-vitals-for-wordpress.php:978 site-vitals-for-wordpress.php:1014
+#: site-vitals-for-wordpress.php:1153 site-vitals-for-wordpress.php:1183
+#: site-vitals-for-wordpress.php:1216 site-vitals-for-wordpress.php:1246
+#: site-vitals-for-wordpress.php:1276 site-vitals-for-wordpress.php:1306
+#: site-vitals-for-wordpress.php:1410 site-vitals-for-wordpress.php:1476
+#: site-vitals-for-wordpress.php:1501 site-vitals-for-wordpress.php:1525
+#: site-vitals-for-wordpress.php:1556 site-vitals-for-wordpress.php:1642
+#: site-vitals-for-wordpress.php:1694 site-vitals-for-wordpress.php:1749
 msgid "Needs Attention"
 msgstr ""
 
-#: site-vitals-for-wordpress.php:322
+#: site-vitals-for-wordpress.php:354
 msgid "No slow third-party scripts detected."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:323
+#: site-vitals-for-wordpress.php:355
 msgid "Consider optimizing or deferring these scripts: "
 msgstr ""
 
-#: site-vitals-for-wordpress.php:345
+#: site-vitals-for-wordpress.php:379
 #, php-format
 msgid ""
 "Server response time is %s seconds. Consider server optimizations or "
 "upgrading your hosting plan."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:346
+#: site-vitals-for-wordpress.php:380
 msgid "Server response time is optimal."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:364
+#: site-vitals-for-wordpress.php:398
 msgid "SSL is active on your site."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:365
+#: site-vitals-for-wordpress.php:399
 msgid ""
 "Your site is not using SSL. Consider enabling SSL for security and SEO "
 "benefits."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:392
+#: site-vitals-for-wordpress.php:426
 msgid "All plugins are up to date."
 msgstr ""
 
 #. translators: %1$d: number of outdated plugins, %2$s: list of outdated plugin names
-#: site-vitals-for-wordpress.php:396
+#: site-vitals-for-wordpress.php:430
 #, php-format
 msgid ""
 "<strong>%1$d outdated plugins</strong> detected: %2$s. Update them to the "
 "latest version for security."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:428
+#: site-vitals-for-wordpress.php:462
 msgid "All themes are up to date."
 msgstr ""
 
 #. translators: %1$d: number of outdated themes, %2$s: list of outdated theme names
-#: site-vitals-for-wordpress.php:432
+#: site-vitals-for-wordpress.php:466
 #, php-format
 msgid ""
 "<strong>%1$d outdated themes</strong> detected: %2$s. Update them to the "
 "latest version for security."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:466
+#: site-vitals-for-wordpress.php:500
 msgid ""
 "A WordPress core update is available. Please update to the latest version."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:467
+#: site-vitals-for-wordpress.php:501
 msgid "WordPress core is up to date."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:485
+#: site-vitals-for-wordpress.php:519
 msgid "Two-factor authentication is enabled for logins."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:486
+#: site-vitals-for-wordpress.php:520
 msgid ""
 "Consider enabling two-factor authentication for additional login security."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:518
+#: site-vitals-for-wordpress.php:552
 msgid "All recommended security headers are present."
 msgstr ""
 
 #. translators: %s: list of missing security headers
-#: site-vitals-for-wordpress.php:521
+#: site-vitals-for-wordpress.php:555
 #, php-format
 msgid "Missing security headers: %s. Consider adding them to improve security."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:570
+#: site-vitals-for-wordpress.php:604
 msgid "File permissions are secure."
 msgstr ""
 
 #. translators: %s: list of insecure files
-#: site-vitals-for-wordpress.php:573
+#: site-vitals-for-wordpress.php:607
 #, php-format
 msgid ""
 "Insecure file permissions detected for: %s. Set permissions to the "
@@ -259,93 +429,93 @@ msgid ""
 "security."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:596
+#: site-vitals-for-wordpress.php:630
 msgid ""
 "Unable to fetch homepage for SEO check. Please verify the server status."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:607
+#: site-vitals-for-wordpress.php:641
 msgid "Title and description meta tags are set correctly."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:608
+#: site-vitals-for-wordpress.php:642
 msgid "Ensure both title and description meta tags are set for optimal SEO."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:654
+#: site-vitals-for-wordpress.php:688
 msgid "No SEO Plugins Detected"
 msgstr ""
 
-#: site-vitals-for-wordpress.php:654
+#: site-vitals-for-wordpress.php:688
 msgid "SEO Plugin Active"
 msgstr ""
 
-#: site-vitals-for-wordpress.php:656
+#: site-vitals-for-wordpress.php:690
 msgid ""
 "Consider installing an SEO plugin to enhance your site’s search engine "
 "visibility."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:657
+#: site-vitals-for-wordpress.php:691
 msgid "SEO plugin detected. Your site has additional SEO features enabled."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:694
+#: site-vitals-for-wordpress.php:728
 msgid "All images have alt text, which is good for SEO."
 msgstr ""
 
 #. translators: %s: number of images missing alt text
-#: site-vitals-for-wordpress.php:698
+#: site-vitals-for-wordpress.php:732
 #, php-format
 msgid ""
 "<strong>%s images</strong> are missing alt text. Add descriptive alt text to "
 "improve SEO."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:736
+#: site-vitals-for-wordpress.php:770
 msgid "No Sitemap Found"
 msgstr ""
 
-#: site-vitals-for-wordpress.php:739
+#: site-vitals-for-wordpress.php:773
 msgid "Sitemap detected, which helps search engines index your site."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:740
+#: site-vitals-for-wordpress.php:774
 msgid ""
 "No sitemap found. Consider adding a sitemap to improve search engine "
 "indexing."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:758
+#: site-vitals-for-wordpress.php:792
 msgid ""
 "Your theme supports mobile responsiveness, enhancing user experience on "
 "mobile devices."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:759
+#: site-vitals-for-wordpress.php:793
 msgid ""
 "Consider using a mobile-responsive theme to improve user experience on "
 "mobile devices."
 msgstr ""
 
 #. translators: %s: number of orphaned pages
-#: site-vitals-for-wordpress.php:806
+#: site-vitals-for-wordpress.php:840
 #, php-format
 msgid ""
 "Detected <strong>%s pages</strong> might be orphaned with no incoming links. "
 "Consider improving navigation or linking these pages."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:810
+#: site-vitals-for-wordpress.php:844
 msgid "Navigation clarity is good, with no orphaned pages detected."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:845
+#: site-vitals-for-wordpress.php:879
 msgid "All images have alt tags, which helps meet accessibility standards."
 msgstr ""
 
 #. translators: %s: number of images missing alt tags
-#: site-vitals-for-wordpress.php:849
+#: site-vitals-for-wordpress.php:883
 #, php-format
 msgid ""
 "<strong>%s images</strong> are missing alt tags. Add descriptive alt tags to "
@@ -353,255 +523,255 @@ msgid ""
 msgstr ""
 
 #. translators: %s: number of 404 error pages
-#: site-vitals-for-wordpress.php:888
+#: site-vitals-for-wordpress.php:922
 #, php-format
 msgid ""
 "Detected <strong>%s pages</strong> returning 404 errors. Ensure no broken "
 "links or missing pages."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:892
+#: site-vitals-for-wordpress.php:926
 msgid "No 404 error pages detected, navigation is clear."
 msgstr ""
 
 #. translators: %s: homepage load time in seconds
-#: site-vitals-for-wordpress.php:918
+#: site-vitals-for-wordpress.php:952
 #, php-format
 msgid ""
 "Homepage load time is <strong>%s seconds</strong>. Consider optimizing "
 "images or enabling caching."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:922
+#: site-vitals-for-wordpress.php:956
 msgid "Homepage load time is optimal."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:946
+#: site-vitals-for-wordpress.php:980
 msgid "Font size and line spacing meet readability standards."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:947
+#: site-vitals-for-wordpress.php:981
 msgid "Consider adjusting font size and line spacing to improve readability."
 msgstr ""
 
 #. translators: %s: number of stale posts
-#: site-vitals-for-wordpress.php:985
+#: site-vitals-for-wordpress.php:1019
 #, php-format
 msgid ""
 "<strong>%s posts</strong> have not been updated in over a year. Consider "
 "updating or reviewing for relevance."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:989
+#: site-vitals-for-wordpress.php:1023
 msgid "All posts have been updated recently."
 msgstr ""
 
 #. translators: %s: number of broken links
-#: site-vitals-for-wordpress.php:1126
+#: site-vitals-for-wordpress.php:1160
 #, php-format
 msgid ""
 "<strong>%s broken links</strong> found. Consider updating or removing these "
 "links."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:1130
+#: site-vitals-for-wordpress.php:1164
 msgid "No broken links detected."
 msgstr ""
 
 #. translators: %s: number of short posts
-#: site-vitals-for-wordpress.php:1156
+#: site-vitals-for-wordpress.php:1190
 #, php-format
 msgid ""
 "<strong>%s posts</strong> have short content. Consider adding more detail or "
 "value to these posts."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:1160
+#: site-vitals-for-wordpress.php:1194
 msgid "All posts meet the recommended content length."
 msgstr ""
 
 #. translators: %s: number of posts missing featured images
-#: site-vitals-for-wordpress.php:1189
+#: site-vitals-for-wordpress.php:1223
 #, php-format
 msgid ""
 "<strong>%s posts</strong> are missing featured images. Consider adding media "
 "to enrich content."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:1193
+#: site-vitals-for-wordpress.php:1227
 msgid "All posts include featured images or media."
 msgstr ""
 
 #. translators: %s: number of duplicate titles
-#: site-vitals-for-wordpress.php:1219
+#: site-vitals-for-wordpress.php:1253
 #, php-format
 msgid ""
 "<strong>%s posts</strong> have duplicate titles. Consider making each title "
 "unique for better SEO."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:1223
+#: site-vitals-for-wordpress.php:1257
 msgid "No duplicate titles detected."
 msgstr ""
 
 #. translators: %s: number of posts with excessive revisions
-#: site-vitals-for-wordpress.php:1249
+#: site-vitals-for-wordpress.php:1283
 #, php-format
 msgid ""
 "<strong>%s posts</strong> have excessive revisions. Consider cleaning up to "
 "optimize the database."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:1253
+#: site-vitals-for-wordpress.php:1287
 msgid "Revision count is within an acceptable range."
 msgstr ""
 
 #. translators: %s: number of posts missing categories or tags
-#: site-vitals-for-wordpress.php:1279
+#: site-vitals-for-wordpress.php:1313
 #, php-format
 msgid ""
 "<strong>%s posts</strong> are missing categories or tags. Consider "
 "categorizing/tagging them for better organization."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:1283
+#: site-vitals-for-wordpress.php:1317
 msgid "All posts are categorized or tagged."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:1356
+#: site-vitals-for-wordpress.php:1390 site-vitals-for-wordpress.php:1753
 msgid "No Caching Detected"
 msgstr ""
 
-#: site-vitals-for-wordpress.php:1356
+#: site-vitals-for-wordpress.php:1390 site-vitals-for-wordpress.php:1755
 msgid "Caching Active"
 msgstr ""
 
-#: site-vitals-for-wordpress.php:1358
+#: site-vitals-for-wordpress.php:1392
 msgid "Consider installing a caching plugin to improve performance."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:1359
+#: site-vitals-for-wordpress.php:1393
 msgid "Caching is active, which helps improve performance."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:1378
+#: site-vitals-for-wordpress.php:1412
 msgid "PHP version is up to date."
 msgstr ""
 
 #. translators: %1$s: current PHP version, %2$s: recommended PHP version
-#: site-vitals-for-wordpress.php:1381
+#: site-vitals-for-wordpress.php:1415
 #, php-format
 msgid "Current PHP version is %1$s. Consider upgrading to PHP %2$s or higher."
 msgstr ""
 
 #. translators: %1$d: number of transients, %2$d: number of revisions
-#: site-vitals-for-wordpress.php:1421
+#: site-vitals-for-wordpress.php:1455
 #, php-format
 msgid ""
 "Database optimization recommended: %1$d transients and %2$d post revisions "
 "detected."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:1425
+#: site-vitals-for-wordpress.php:1459
 msgid "Database is optimized."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:1444
+#: site-vitals-for-wordpress.php:1478
 msgid "Max upload size is sufficient."
 msgstr ""
 
 #. translators: %s: formatted max upload size, %s: recommended size
-#: site-vitals-for-wordpress.php:1447
+#: site-vitals-for-wordpress.php:1481
 #, php-format
 msgid ""
 "Current max upload size is %1$s. Consider increasing it for larger media "
 "files."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:1469
+#: site-vitals-for-wordpress.php:1503
 msgid "Memory limit is sufficient."
 msgstr ""
 
 #. translators: %s: formatted memory limit, %s: recommended memory limit
-#: site-vitals-for-wordpress.php:1472
+#: site-vitals-for-wordpress.php:1506
 #, php-format
 msgid "Current memory limit is %1$s. Consider increasing it to at least %2$s."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:1493
+#: site-vitals-for-wordpress.php:1527
 msgid "Gzip compression is enabled, which helps reduce page load time."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:1494
+#: site-vitals-for-wordpress.php:1528
 msgid ""
 "Gzip compression is not enabled. Consider enabling it for faster load times."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:1524
+#: site-vitals-for-wordpress.php:1558
 msgid "All images have alt text."
 msgstr ""
 
 #. translators: %d: number of images missing alt text
-#: site-vitals-for-wordpress.php:1527
+#: site-vitals-for-wordpress.php:1561
 #, php-format
 msgid ""
 "<strong>%d images</strong> are missing alt text. Add descriptive alt text "
 "for accessibility."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:1545 site-vitals-for-wordpress.php:1561
-#: site-vitals-for-wordpress.php:1577 site-vitals-for-wordpress.php:1631
+#: site-vitals-for-wordpress.php:1579 site-vitals-for-wordpress.php:1595
+#: site-vitals-for-wordpress.php:1611 site-vitals-for-wordpress.php:1665
 msgid "Unchecked"
 msgstr ""
 
-#: site-vitals-for-wordpress.php:1546
+#: site-vitals-for-wordpress.php:1580
 msgid ""
 "Use a contrast checker to ensure text is readable against its background "
 "color."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:1562
+#: site-vitals-for-wordpress.php:1596
 msgid ""
 "Ensure that all interactive elements are accessible via keyboard navigation."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:1578
+#: site-vitals-for-wordpress.php:1612
 msgid ""
 "Use appropriate ARIA roles and landmarks on major content areas for "
 "accessibility."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:1610
+#: site-vitals-for-wordpress.php:1644
 msgid "All form fields have labels."
 msgstr ""
 
 #. translators: %d: number of form fields missing labels
-#: site-vitals-for-wordpress.php:1613
+#: site-vitals-for-wordpress.php:1647
 #, php-format
 msgid ""
 "<strong>%d form fields</strong> are missing labels. Add labels to improve "
 "accessibility."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:1632
+#: site-vitals-for-wordpress.php:1666
 msgid ""
 "Ensure headings follow a logical structure (e.g., H1 > H2 > H3) for "
 "accessibility."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:1662
+#: site-vitals-for-wordpress.php:1696
 msgid "All links are descriptive."
 msgstr ""
 
 #. translators: %d: number of ambiguous links
-#: site-vitals-for-wordpress.php:1665
+#: site-vitals-for-wordpress.php:1699
 #, php-format
 msgid ""
 "<strong>%d links</strong> have ambiguous text. Use descriptive link text for "
 "accessibility."
 msgstr ""
 
-#: site-vitals-for-wordpress.php:1693
+#: site-vitals-for-wordpress.php:1727
 msgid "Loading"
 msgstr ""
 
