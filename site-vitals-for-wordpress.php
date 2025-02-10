@@ -42,7 +42,8 @@ $myUpdateChecker->setBranch( 'main' );
 // Define the plugin version.
 define( 'SVWP_VERSION', '1.1.1' );
 
-if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+// Check if Composer's autoloader is already registered globally.
+if ( ! class_exists( 'RobertDevore\WPComCheck\WPComPluginHandler' ) ) {
     require_once __DIR__ . '/vendor/autoload.php';
 }
 
