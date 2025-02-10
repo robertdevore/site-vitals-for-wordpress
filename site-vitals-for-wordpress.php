@@ -27,6 +27,7 @@ if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
+require 'includes/activation.php';
 require 'includes/helper-functions.php';
 
 require 'vendor/plugin-update-checker/plugin-update-checker.php';
@@ -214,8 +215,8 @@ class Site_Vitals_For_WordPress {
             return;
         }
 
-        wp_enqueue_style( 'site-vitals-css', plugin_dir_url( __FILE__ ) . 'assets/css/admin.css' );
-        wp_enqueue_script( 'site-vitals-js', plugin_dir_url( __FILE__ ) . 'assets/js/admin.js', [ 'jquery' ], null, true );
+        wp_enqueue_style( 'site-vitals-css', plugin_dir_url( __FILE__ ) . 'assets/css/admin.css', [], SVWP_VERSION );
+        wp_enqueue_script( 'site-vitals-js', plugin_dir_url( __FILE__ ) . 'assets/js/admin.js', [ 'jquery' ], SVWP_VERSION, true );
         wp_localize_script( 'site-vitals-js', 'siteVitals', [
             'nonce' => wp_create_nonce('site_vitals_nonce')
         ] );
@@ -235,9 +236,9 @@ class Site_Vitals_For_WordPress {
         $total_time   = 0;
 
         for ( $i = 0; $i < $num_requests; $i++ ) {
-            $start_time = microtime( true );
-            $response   = wp_remote_get( esc_url( $url ) );
-            $load_time  = microtime( true ) - $start_time;
+            $start_time  = microtime( true );
+            $response    = wp_remote_get( esc_url( $url ) );
+            $load_time   = microtime( true ) - $start_time;
             $total_time += $load_time;
 
             if ( is_wp_error( $response ) ) {
@@ -309,7 +310,7 @@ class Site_Vitals_For_WordPress {
         $theme_dir       = get_template_directory();
         $css_files       = glob( $theme_dir . '/*.css' );
         $js_files        = glob( $theme_dir . '/*.js' );
-        $excessive_files = ( count( $css_files ) > 10 || count( $js_files ) > 10 );
+        $excessive_files = count( $css_files ) > 10 || count( $js_files ) > 10;
 
         $result         = $excessive_files ? esc_html__( 'Fair', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
         $recommendation = $excessive_files
@@ -367,7 +368,9 @@ class Site_Vitals_For_WordPress {
      */
     public function run_server_response_time_check() {
         $start_time    = microtime( true );
+
         wp_remote_get( esc_url( home_url() ) );
+
         $response_time = microtime( true ) - $start_time;
         $threshold     = 0.5;
 
@@ -1142,7 +1145,7 @@ class Site_Vitals_For_WordPress {
                 }
             }
 
-            // Cache the result (for example, for one hour).
+            // Cache the result.
             set_transient( 'site_vitals_broken_links_count', $broken_links, HOUR_IN_SECONDS );
         }
 
@@ -1169,17 +1172,17 @@ class Site_Vitals_For_WordPress {
     /**
      * Runs content length check.
      *
-     * @since 1.0.0
+     * @since  1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_content_length_check() {
-        $vitals = get_transient( 'site_vitals_data' );
+        $vitals      = get_transient( 'site_vitals_data' );
         $short_posts = isset( $vitals['short_posts'] ) ? $vitals['short_posts'] : 0;
-        
+
         $result = ( $short_posts > 0 ) 
             ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) 
             : esc_html__( 'Good', 'site-vitals-wp' );
-        
+
         $recommendation = ( $short_posts > 0 )
             ? wp_kses_post(
                 sprintf(
@@ -1189,7 +1192,7 @@ class Site_Vitals_For_WordPress {
                 )
             )
             : esc_html__( 'All posts meet the recommended content length.', 'site-vitals-wp' );
-        
+
         return [
             'result'         => $result,
             'recommendation' => $recommendation,
@@ -1199,20 +1202,20 @@ class Site_Vitals_For_WordPress {
     /**
      * Runs media usage check.
      *
-     * @since 1.0.0
+     * @since  1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_media_usage_check() {
-        $vitals = get_transient( 'site_vitals_data' );
-        $total_posts = isset( $vitals['total_posts'] ) ? $vitals['total_posts'] : 0;
+        $vitals           = get_transient( 'site_vitals_data' );
+        $total_posts      = isset( $vitals['total_posts'] ) ? $vitals['total_posts'] : 0;
         $posts_with_media = isset( $vitals['posts_with_media'] ) ? $vitals['posts_with_media'] : 0;
-        
+
         $missing_media_count = $total_posts - $posts_with_media;
-        
+
         $result = ( $missing_media_count > 0 ) 
             ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) 
             : esc_html__( 'Good', 'site-vitals-wp' );
-        
+
         $recommendation = ( $missing_media_count > 0 )
             ? wp_kses_post(
                 sprintf(
@@ -1222,7 +1225,7 @@ class Site_Vitals_For_WordPress {
                 )
             )
             : esc_html__( 'All posts include featured images or media.', 'site-vitals-wp' );
-        
+
         return [
             'result'         => $result,
             'recommendation' => $recommendation,
@@ -1236,13 +1239,13 @@ class Site_Vitals_For_WordPress {
      * @return array An array containing the result and recommendation.
      */
     public function run_duplicate_content_check() {
-        $vitals = get_transient( 'site_vitals_data' );
+        $vitals           = get_transient( 'site_vitals_data' );
         $duplicate_titles = isset( $vitals['duplicate_titles'] ) ? $vitals['duplicate_titles'] : 0;
-        
+
         $result = ( $duplicate_titles > 0 ) 
             ? esc_html__( 'Needs Attention', 'site-vitals-wp' ) 
             : esc_html__( 'Good', 'site-vitals-wp' );
-        
+
         $recommendation = ( $duplicate_titles > 0 )
             ? wp_kses_post(
                 sprintf(
@@ -1252,7 +1255,7 @@ class Site_Vitals_For_WordPress {
                 )
             )
             : esc_html__( 'No duplicate titles detected.', 'site-vitals-wp' );
-        
+
         return [
             'result'         => $result,
             'recommendation' => $recommendation,
@@ -1292,11 +1295,11 @@ class Site_Vitals_For_WordPress {
     /**
      * Runs taxonomy usage check.
      *
-     * @since 1.0.0
+     * @since  1.0.0
      * @return array An array containing the result and recommendation.
      */
     public function run_taxonomy_usage_check() {
-        $vitals = get_transient( 'site_vitals_data' );
+        $vitals         = get_transient( 'site_vitals_data' );
         $untagged_posts = isset( $vitals['untagged_posts'] ) ? $vitals['untagged_posts'] : 0;
 
         $result = ( $untagged_posts > 0 ) 
@@ -1443,7 +1446,7 @@ class Site_Vitals_For_WordPress {
             )
         );
 
-        $needs_optimization = ( $transient_count > 100 || $revision_count > 100 );
+        $needs_optimization = $transient_count > 100 || $revision_count > 100;
 
         $result         = $needs_optimization ? esc_html__( 'Needs Optimization', 'site-vitals-wp' ) : esc_html__( 'Good', 'site-vitals-wp' );
         $recommendation = $needs_optimization
@@ -1493,10 +1496,10 @@ class Site_Vitals_For_WordPress {
      * @return array An array containing the result and recommendation.
      */
     public function run_memory_limit_check() {
-        $memory_limit       = wp_convert_hr_to_bytes( WP_MEMORY_LIMIT );
-        $recommended_limit  = 128 * 1024 * 1024; // 128 MB
-        $result             = ( $memory_limit >= $recommended_limit ) ? esc_html__( 'Good', 'site-vitals-wp' ) : esc_html__( 'Needs Attention', 'site-vitals-wp' );
-        $recommendation     = ( 'Good' === $result )
+        $memory_limit      = wp_convert_hr_to_bytes( WP_MEMORY_LIMIT );
+        $recommended_limit = 128 * 1024 * 1024; // 128 MB
+        $result            = ( $memory_limit >= $recommended_limit ) ? esc_html__( 'Good', 'site-vitals-wp' ) : esc_html__( 'Needs Attention', 'site-vitals-wp' );
+        $recommendation    = ( 'Good' === $result )
             ? esc_html__( 'Memory limit is sufficient.', 'site-vitals-wp' )
             : sprintf(
                 /* translators: %s: formatted memory limit, %s: recommended memory limit */
@@ -1715,7 +1718,7 @@ class Site_Vitals_For_WordPress {
     public function display_category_summary( $category, $label ) {
         // Build the URL for the settings page.
         $settings_url = admin_url( 'admin.php?page=site-vitals-' . $category );
-        
+
         // Build the output string.
         $output  = '<a href="' . esc_url( $settings_url ) . '" style="text-decoration: none; color: inherit;">';
         $output .= '<div class="site-vital-summary-box" data-category="' . esc_attr( $category ) . '">';
@@ -1725,7 +1728,7 @@ class Site_Vitals_For_WordPress {
         $output .= '</div>';
         $output .= '</div>';
         $output .= '</a>';
-        
+
         // Echo the entire output once.
         echo $output;
     }
@@ -1741,17 +1744,17 @@ class Site_Vitals_For_WordPress {
      */
     private function get_status_class( $status ) {
         switch ( $status ) {
-            case 'Good':
+            case __( 'Good', 'site-vitals-wp' ):
                 return 'status-good';
-            case 'Needs Attention':
+            case __( 'Needs Attention', 'site-vitals-wp' ):
                 return 'status-warning';
-            case 'Needs Improvement':
+            case __( 'Needs Improvement', 'site-vitals-wp' ):
                 return 'status-danger';
-            case 'No Caching Detected':
+            case __( 'No Caching Detected', 'site-vitals-wp' ):
                 return 'status-danger';
-            case 'Caching Active':
+            case __( 'Caching Active', 'site-vitals-wp' ):
                 return 'status-good';
-            case 'Needs Optimization':
+            case __( 'Needs Optimization', 'site-vitals-wp' ):
                 return 'status-warning';
             default:
                 return 'status-default';
@@ -1760,123 +1763,3 @@ class Site_Vitals_For_WordPress {
 }
 
 new Site_Vitals_For_WordPress();
-
-/**
- * Plugin activation
- * 
- * @since  1.0.0
- * @return void
- */
-function site_vitals_plugin_activate() {
-    // Instantiate the main class.
-    $sv         = new Site_Vitals_For_WordPress();
-    $categories = $sv->get_categories();
-
-    foreach ( $categories as $cat_slug => $cat_label ) {
-        // Prepare the table data for this category.
-        $table = new Site_Vitals_Table( $sv, $cat_slug );
-        $table->prepare_items();
-        $checks = $table->items;
-
-        // Cache the checks for 12 hours (43200 seconds).
-        set_transient( 'site_vitals_' . $cat_slug, $checks, 43200 );
-    }
-}
-register_activation_hook( __FILE__, 'site_vitals_plugin_activate' );
-
-/**
- * Handles the AJAX request to retrieve cached or freshly computed site vitals data for a given category.
- *
- * This function:
- * - Verifies permissions and a security nonce.
- * - Retrieves category-specific checks from a transient if available or computes them on the fly.
- * - Counts how many checks are "Good," "Needs Attention," or "Needs Improvement."
- * - Returns the counts as a JSON response.
- *
- * Hooked to the 'wp_ajax_site_vitals_get_category_data' action.
- *
- * @since  1.0.0
- * @return void This function outputs JSON data and terminates execution.
- */
-function site_vitals_get_category_data() {
-    // Security check.
-    check_ajax_referer( 'site_vitals_nonce', 'nonce' );
-
-    if ( ! current_user_can( 'manage_options' ) ) {
-        wp_send_json_error( [ 'message' => 'No permission.' ] );
-    }
-
-    $category = isset( $_POST['category'] ) ? sanitize_text_field( $_POST['category'] ) : '';
-    if ( empty( $category ) ) {
-        wp_send_json_error( [ 'message' => 'No category provided.' ] );
-    }
-
-    // Attempt to get cached data.
-    $transient_key = 'site_vitals_' . $category;
-    $checks = get_transient( $transient_key );
-
-    if ( false === $checks ) {
-        // Not cached, run table checks.
-        $table = new Site_Vitals_Table( new Site_Vitals_For_WordPress(), $category );
-        $table->prepare_items();
-        $checks = $table->items;
-        // Cache for 12 hours.
-        set_transient( $transient_key, $checks, 43200 );
-    }
-
-    $good_count    = 0;
-    $warning_count = 0;
-    $danger_count  = 0;
-
-    foreach ( $checks as $check ) {
-        $status = isset( $check['result'] ) ? strtolower( $check['result'] ) : '';
-
-        if ( false !== strpos( $status, 'good' ) || false !== strpos( $status, 'caching active' ) ) {
-            // Good statuses.
-            $good_count++;
-        } elseif (
-            false !== strpos( $status, 'needs attention' ) ||
-            false !== strpos( $status, 'needs optimization' ) ||
-            false !== strpos( $status, 'no caching detected' ) ||
-            false !== strpos( $status, 'no seo plugins detected' ) ||
-            false !== strpos( $status, 'no sitemap found' ) ||
-            false !== strpos( $status, 'fair' )
-        ) {
-            // Warning statuses.
-            $warning_count++;
-        } elseif ( false !== strpos( $status, 'needs improvement' ) ) {
-            // Danger statuses.
-            $danger_count++;
-        } else {
-            // If something unexpected, treat as warning.
-            $warning_count++;
-        }
-    }
-
-    wp_send_json_success( [
-        'good'    => $good_count,
-        'warning' => $warning_count,
-        'danger'  => $danger_count,
-    ] );
-}
-add_action( 'wp_ajax_site_vitals_get_category_data', 'site_vitals_get_category_data' );
-
-// Schedule the event on plugin activation.
-function site_vitals_schedule_update() {
-    if ( ! wp_next_scheduled( 'update_site_vitals_event' ) ) {
-        wp_schedule_event( time(), 'hourly', 'update_site_vitals_event' );
-    }
-}
-register_activation_hook( __FILE__, 'site_vitals_schedule_update' );
-
-// Unschedule on deactivation.
-function site_vitals_unschedule_update() {
-    $timestamp = wp_next_scheduled( 'update_site_vitals_event' );
-    if ( $timestamp ) {
-        wp_unschedule_event( $timestamp, 'update_site_vitals_event' );
-    }
-}
-register_deactivation_hook( __FILE__, 'site_vitals_unschedule_update' );
-
-// Hook the update function.
-add_action( 'update_site_vitals_event', 'update_site_vitals' );
