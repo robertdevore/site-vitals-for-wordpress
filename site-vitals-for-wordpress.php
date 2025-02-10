@@ -27,6 +27,8 @@ if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
+require 'includes/helper-functions.php';
+
 require 'vendor/plugin-update-checker/plugin-update-checker.php';
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
