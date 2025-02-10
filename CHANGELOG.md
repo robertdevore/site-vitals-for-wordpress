@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 1.1.2
+
+* [🐛 BUG: Fixed WPCom Check autoloader check to use class_exists](https://github.com/robertdevore/site-vitals-for-wordpress/commit/f4435485b5cf25f8dee260f7e65f3ebfbf1db6c6)
+* [🐛 BUG: Fixed `getallheaders()` causing fatal error in certain hosting environments](https://github.com/robertdevore/site-vitals-for-wordpress/commit/76cca396edd33fdd01b61ec7fcd4593975520d7b)
+* [📦 NEW: Added Italian translation](https://github.com/robertdevore/site-vitals-for-wordpress/commit/529dee7fef80df98ea900c45298eb22107992f6a)
+* [👌 IMPROVE: General code cleanup](https://github.com/robertdevore/site-vitals-for-wordpress/commit/438c3589498cbd21118eb227ae5d422f9a03b663)
+* [👌 IMPROVE: Updated text strings for localization](https://github.com/robertdevore/site-vitals-for-wordpress/commit/a84ab6835a7347e9d8a43e83ff9502a1c40cf010)
+* [👌 IMPROVE: Updated language translation files](https://github.com/robertdevore/site-vitals-for-wordpress/commit/6eb9808f69ee97eded218d9f8ee464d70c508d36)
+
 ## 1.1.1
 
 * [🐛 BUG: Fixed GLOB_BRACE usage causing fatal errors on some systems](https://github.com/robertdevore/site-vitals-for-wordpress/commit/943260999d9eda886e2b07790d341b5477ce4c3f)

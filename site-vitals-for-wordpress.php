@@ -12,7 +12,7 @@
   * Plugin Name: Site Vitals for WordPress®
   * Description: Monitor and improve the performance, security, and SEO health of your WordPress® site.
   * Plugin URI:  https://github.com/robertdevore/site-vitals-for-wordpress/
-  * Version:     1.1.1
+  * Version:     1.1.2
   * Author:      Robert DeVore
   * Author URI:  https://robertdevore.com/
   * License:     GPL-2.0+
@@ -43,7 +43,7 @@ $myUpdateChecker = PucFactory::buildUpdateChecker(
 $myUpdateChecker->setBranch( 'main' );
 
 // Define the plugin version.
-define( 'SVWP_VERSION', '1.1.1' );
+define( 'SVWP_VERSION', '1.1.2' );
 
 // Check if Composer's autoloader is already registered globally.
 if ( ! class_exists( 'RobertDevore\WPComCheck\WPComPluginHandler' ) ) {
